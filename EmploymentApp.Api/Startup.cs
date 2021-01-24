@@ -1,5 +1,7 @@
 using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Infrastructure.Data;
+using EmploymentApp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,8 +33,9 @@ namespace EmploymentApp.Api
         {
             services.AddDbContext<EmploymentDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("ConnectionStrings"));
+                options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddControllers();
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EmploymentApp.Core.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,16 @@ namespace EmploymentApp.Api.Controllers
 
     public class CategoryController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Welcome()
+        ICategoryRepository _categoryRepository;
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            return Ok("Welcome");
+            _categoryRepository = categoryRepository;
+        }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var categories = _categoryRepository.GetAll();
+            return Ok(categories);
         }
     }
 }
