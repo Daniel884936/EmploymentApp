@@ -7,18 +7,15 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class User
+    public partial class User: BaseEntity
     {
         public User()
         {
             UserLogin = new HashSet<UserLogin>();
         }
-
-        public int UserId { get; set; }
         public string Name { get; set; }
         public string Surnames { get; set; }
         public DateTime Bithdate { get; set; }
-
         public virtual ICollection<UserLogin> UserLogin { get; set; }
     }
 }

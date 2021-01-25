@@ -11,6 +11,12 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName("UserId")
+                .ValueGeneratedNever();
+
             builder.Property(e => e.Bithdate).HasColumnType("date");
 
             builder.Property(e => e.Name)

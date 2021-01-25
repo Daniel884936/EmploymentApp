@@ -11,6 +11,12 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<UserLogin> builder)
         {
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName("UserLoginId")
+                .ValueGeneratedNever();
+
             builder.HasIndex(e => e.Email)
                    .HasName("idx_email")
                    .IsUnique();

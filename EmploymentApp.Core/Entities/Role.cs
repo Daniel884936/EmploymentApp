@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class Role
+    public partial class Role: BaseEntity
     {
-        public int RoleId { get; set; }
+        
         public string Name { get; set; }
     }
 }

@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class Job
+    public partial class Job: BaseEntity
     {
-        public int JobId { get; set; }
         public decimal? Lat { get; set; }
         public decimal? Long { get; set; }
         public string Img { get; set; }

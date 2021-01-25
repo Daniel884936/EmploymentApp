@@ -7,14 +7,13 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class Category
+    public partial class Category: BaseEntity
     {
         public Category()
         {
             Job = new HashSet<Job>();
         }
-
-        public int CategoryId { get; set; }
+  
         public string Name { get; set; }
 
         public virtual ICollection<Job> Job { get; set; }

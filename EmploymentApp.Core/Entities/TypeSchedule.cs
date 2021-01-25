@@ -7,14 +7,12 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class TypeSchedule
+    public partial class TypeSchedule: BaseEntity
     {
         public TypeSchedule()
         {
             Job = new HashSet<Job>();
-        }
-
-        public int TypeScheduleId { get; set; }
+        }     
         public string Name { get; set; }
 
         public virtual ICollection<Job> Job { get; set; }

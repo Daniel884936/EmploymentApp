@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace EmploymentApp.Core.Entities
 {
-    public partial class UserLogin
+    public partial class UserLogin: BaseEntity
     {
-        public int UserLoginId { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public int UserId { get; set; }

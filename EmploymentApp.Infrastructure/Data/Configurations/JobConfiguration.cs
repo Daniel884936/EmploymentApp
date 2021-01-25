@@ -11,6 +11,12 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Job> builder)
         {
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName("JobId")
+                .ValueGeneratedNever();
+
             builder.Property(e => e.Company)
                     .HasMaxLength(80)
                     .IsUnicode(false);

@@ -11,6 +11,12 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName("RoleId")
+                .ValueGeneratedNever();
+
             builder.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(17)

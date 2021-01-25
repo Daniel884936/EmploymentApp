@@ -1,4 +1,5 @@
-﻿using EmploymentApp.Core.Interfaces;
+﻿using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,8 +14,9 @@ namespace EmploymentApp.Api.Controllers
 
     public class CategoryController : ControllerBase
     {
-        ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository categoryRepository)
+
+        IRepository<Category> _categoryRepository;
+        public CategoryController(IRepository<Category> categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
