@@ -14,16 +14,16 @@ namespace EmploymentApp.Api.Controllers
 
     public class CategoryController : ControllerBase
     {
-
-        IRepository<Category> _categoryRepository;
-        public CategoryController(IRepository<Category> categoryRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController( IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            var categories = _categoryRepository.GetAll();
+            var categories = _unitOfWork.CategoryRepository.GetAll();
             return Ok(categories);
         }
     }

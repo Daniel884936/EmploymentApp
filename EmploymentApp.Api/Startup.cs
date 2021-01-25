@@ -35,8 +35,10 @@ namespace EmploymentApp.Api
             {
                 options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            //services.AddTransient<ICategoryRepository, CategoryRepository>();
+            //services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+
             services.AddControllers();
         }
 

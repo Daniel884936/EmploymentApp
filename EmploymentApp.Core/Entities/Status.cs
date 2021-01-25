@@ -12,8 +12,7 @@ namespace EmploymentApp.Core.Entities
         public Status()
         {
             Job = new HashSet<Job>();
-        }
-       
+        }      
         public string Name { get; set; }
 
         public virtual ICollection<Job> Job { get; set; }

@@ -8,8 +8,7 @@ using System.Collections.Generic;
 namespace EmploymentApp.Core.Entities
 {
     public partial class Role: BaseEntity
-    {
-        
+    {      
         public string Name { get; set; }
     }
 }
