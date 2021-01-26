@@ -1,20 +1,13 @@
-using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
+using EmploymentApp.Core.Services;
 using EmploymentApp.Infrastructure.Data;
 using EmploymentApp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace EmploymentApp.Api
@@ -38,6 +31,7 @@ namespace EmploymentApp.Api
             //services.AddTransient<ICategoryRepository, CategoryRepository>();
             //services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddTransient<ICategoryService, CategoryService>();
 
             services.AddControllers();
         }

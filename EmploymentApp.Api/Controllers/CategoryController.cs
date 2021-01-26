@@ -1,10 +1,6 @@
 ﻿using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmploymentApp.Api.Controllers
@@ -14,17 +10,45 @@ namespace EmploymentApp.Api.Controllers
 
     public class CategoryController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public CategoryController( IUnitOfWork unitOfWork)
+        private readonly ICategoryService _categoryService;
+        public CategoryController(ICategoryService categoryService)
         {
-            _unitOfWork = unitOfWork;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetCategories()
         {
-            var categories = _unitOfWork.CategoryRepository.GetAll();
+            var categories = _categoryService.GetAll();
             return Ok(categories);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategory(int id)
+        {
+            var category = await _categoryService.GetById(id);
+            return Ok(category);
+        }
+        
+        [HttpPost]
+        public async Task <IActionResult> Post(Category category)
+        {
+            await _categoryService.Add(category);
+            return Ok(category);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(Category category)
+        {
+            await _categoryService.Update(category);
+            return Ok(true);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Detele(int id)
+        {
+            await _categoryService.Remove(id);
+            return Ok(true);
         }
     }
 }

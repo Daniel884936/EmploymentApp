@@ -32,6 +32,7 @@ namespace EmploymentApp.Core.Services
         {
             var category = await _unitOfWork.CategoryRepository.GetById(id);
             _unitOfWork.CategoryRepository.Remove(category);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
         public async Task<bool> Update(Category category)
@@ -39,6 +40,7 @@ namespace EmploymentApp.Core.Services
             var categoryTraking= await _unitOfWork.CategoryRepository.GetById(category.Id);
             categoryTraking.Name = category.Name;
             _unitOfWork.CategoryRepository.Update(categoryTraking);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
     }
