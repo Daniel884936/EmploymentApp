@@ -24,11 +24,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         public async Task<T> GetById(int id) => await _entities.FirstOrDefaultAsync(e => e.Id == id);
         public void Update(T entity) => _entities.Update(entity);
         public async Task Add(T entity) => await _entities.AddAsync(entity);
-        public async Task Remove(int id)
-        {
-            var entity = await GetById(id);
-            _entities.Remove(entity);
-        }
-
+        public void Remove(T entity)=> _entities.Remove(entity);
+        
     }
 }

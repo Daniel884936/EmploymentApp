@@ -9,7 +9,7 @@ namespace EmploymentApp.Core.Interfaces
         Task Add(T entity);
         IEnumerable<T> GetAll();
         Task<T> GetById(int id);
-        Task Remove(int id);
+        void Remove(T entity);
         void Update(T entity);
     }
 }
