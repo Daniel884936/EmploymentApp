@@ -19,6 +19,7 @@ namespace EmploymentApp.Core.Services
         public async Task Add(Category category)
         {
             await _unitOfWork.CategoryRepository.Add(category);
+            await _unitOfWork.SaveChangesAsync();
         }
         public IEnumerable<Category> GetAll()
         {

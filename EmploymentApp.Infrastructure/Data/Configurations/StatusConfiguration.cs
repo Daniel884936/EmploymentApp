@@ -14,8 +14,7 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("StatusId")
-                .ValueGeneratedNever();
+                .HasColumnName("StatusId");              
 
             builder.Property(e => e.Name)
                     .IsRequired()

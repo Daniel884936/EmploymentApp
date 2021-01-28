@@ -1,3 +1,4 @@
+using AutoMapper;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.Services;
 using EmploymentApp.Infrastructure.Data;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System;
 
 namespace EmploymentApp.Api
 {
@@ -28,12 +29,17 @@ namespace EmploymentApp.Api
             {
                 options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
+
             //services.AddTransient<ICategoryRepository, CategoryRepository>();
             //services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<ICategoryService, CategoryService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,8 +14,7 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("UserId")
-                .ValueGeneratedNever();
+                .HasColumnName("UserId");
 
             builder.Property(e => e.Bithdate).HasColumnType("date");
 

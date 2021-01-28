@@ -1,6 +1,10 @@
-﻿using EmploymentApp.Core.Entities;
+﻿using AutoMapper;
+using EmploymentApp.Core.DTOs.CategoryDto;
+using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EmploymentApp.Api.Controllers
@@ -11,35 +15,42 @@ namespace EmploymentApp.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoryController(ICategoryService categoryService)
+        IMapper _mapper;
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetCategories()
         {
             var categories = _categoryService.GetAll();
-            return Ok(categories);
+            var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
+            return Ok(categoriesReadDto);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             var category = await _categoryService.GetById(id);
-            return Ok(category);
+            var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
+            return Ok(categoryReadDto);
         }
         
         [HttpPost]
-        public async Task <IActionResult> Post(Category category)
+        public async Task <IActionResult> Post(CategoryDto categoryDto)
         {
+            var category = _mapper.Map<Category>(categoryDto);
             await _categoryService.Add(category);
-            return Ok(category);
+            var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
+            return Ok(categoryReadDto);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Category category)
+        public async Task<IActionResult> Put(CategoryDto categoryDto)
         {
+            var category = _mapper.Map<Category>(categoryDto);
             await _categoryService.Update(category);
             return Ok(true);
         }

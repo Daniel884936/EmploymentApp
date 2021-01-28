@@ -14,8 +14,7 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("UserLoginId")
-                .ValueGeneratedNever();
+                .HasColumnName("UserLoginId");
 
             builder.HasIndex(e => e.Email)
                    .HasName("idx_email")

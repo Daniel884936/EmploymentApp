@@ -14,9 +14,8 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("CategoryId")
-                .ValueGeneratedNever();
-
+                .HasColumnName("CategoryId");
+                
             builder.Property(e => e.Name)
                      .IsRequired()
                      .HasMaxLength(60)

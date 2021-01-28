@@ -14,8 +14,8 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("JobId")
-                .ValueGeneratedNever();
+                .HasColumnName("JobId");
+                
 
             builder.Property(e => e.Company)
                     .HasMaxLength(80)
