@@ -1,4 +1,5 @@
-﻿using EmploymentApp.Core.Entities;
+﻿using Ardalis.Result;
+using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,33 +17,84 @@ namespace EmploymentApp.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Add(Category category)
+        public async Task<Result<Category>> Add(Category category)
         {
-            await _unitOfWork.CategoryRepository.Add(category);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                await _unitOfWork.CategoryRepository.Add(category);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                return Result<Category>.Error(new string[] { ex.Message });
+            }
+            return Result<Category>.Success(category);
         }
-        public IEnumerable<Category> GetAll()
+
+        public Result<IEnumerable<Category>> GetAll()
         {
-            return _unitOfWork.CategoryRepository.GetAll();
+            IEnumerable<Category> categories;
+            try
+            {
+                categories = _unitOfWork.CategoryRepository.GetAll();
+            }catch(Exception ex)
+            {
+                return Result<IEnumerable<Category>>.Error(new[] { ex.Message });
+            }
+            var result = Result<IEnumerable<Category>>.Success(categories);
+            return result;
         }
-        public async Task<Category> GetById(int id)
+
+
+        public async Task<Result<Category>> GetById(int id)
         {
-            return await _unitOfWork.CategoryRepository.GetById(id);
+            Category category;
+            try
+            {
+                category = await _unitOfWork.CategoryRepository.GetById(id);
+            }
+            catch(Exception ex)
+            {
+                return Result<Category>.Error(new[] { ex.Message });
+            }
+            var result = Result<Category>.Success(category);
+            return result;
         }
-        public async Task<bool> Remove(int id)
+        public async Task<Result<bool>> Remove(int id)
         {
-            var category = await _unitOfWork.CategoryRepository.GetById(id);
-            _unitOfWork.CategoryRepository.Remove(category);
-            await _unitOfWork.SaveChangesAsync();
-            return true;
+            try
+            {
+                var category = await _unitOfWork.CategoryRepository.GetById(id);
+                if (category == null)
+                    return Result<bool>.NotFound();
+                _unitOfWork.CategoryRepository.Remove(category);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.Error(new[] { ex.Message });
+            }
+            var result = Result<bool>.Success(true);
+            return result;
         }
-        public async Task<bool> Update(Category category)
+
+        public async Task<Result<bool>> Update(Category category)
         {
-            var categoryTraking= await _unitOfWork.CategoryRepository.GetById(category.Id);
-            categoryTraking.Name = category.Name;
-            _unitOfWork.CategoryRepository.Update(categoryTraking);
-            await _unitOfWork.SaveChangesAsync();
-            return true;
+            try
+            {
+                var categoryTraking = await _unitOfWork.CategoryRepository.GetById(category.Id);
+                if (categoryTraking == null)
+                    return Result<bool>.NotFound();
+                categoryTraking.Name = category.Name;
+                _unitOfWork.CategoryRepository.Update(categoryTraking);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+               return Result<bool>.Error(new[] { ex.Message });
+            }
+            var result =  Result<bool>.Success(true);
+            return result;
         }
     }
 }
