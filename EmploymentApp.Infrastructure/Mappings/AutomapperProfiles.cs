@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmploymentApp.Core.DTOs;
 using EmploymentApp.Core.DTOs.CategoryDto;
+using EmploymentApp.Core.DTOs.RoleDtos;
 using EmploymentApp.Core.DTOs.StatusDtos;
 using EmploymentApp.Core.Entities;
 using System;
@@ -17,6 +18,8 @@ namespace EmploymentApp.Infrastructure.Mappings
             CreateMap<Category, CategoryDto>();
             CreateMap<Category, CategoryReadDto>();
             CreateMap<Status, StatusReadDto>();
+            CreateMap<Role, RoleReadDto>();
+
         }
     }
 }

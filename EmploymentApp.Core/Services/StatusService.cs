@@ -24,8 +24,8 @@ namespace EmploymentApp.Core.Services
             {
                 return Result<IEnumerable<Status>>.Error(new string[] { ex.Message });
             }
-            var resut = Result<IEnumerable<Status>>.Success(status);
-            return resut;
+            var result = Result<IEnumerable<Status>>.Success(status);
+            return result;
         }
     }
 }

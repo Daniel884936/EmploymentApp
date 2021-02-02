@@ -35,6 +35,8 @@ namespace EmploymentApp.Api
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStatusService, StatusService>();
+            services.AddTransient<IRoleServices, RoleService>();
+
 
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

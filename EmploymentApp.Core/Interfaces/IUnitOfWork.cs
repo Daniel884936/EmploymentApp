@@ -10,6 +10,7 @@ namespace EmploymentApp.Core.Interfaces
     {
          IRepository<Category> CategoryRepository { get; }
          IRepository<Status> StatusRepository { get; }
+         IRepository<Role> RoleRepository { get; }
          IRepository<TypeSchedule> TypeScheduleRepository { get; }
          void SaveChanges();
          Task SaveChangesAsync();
