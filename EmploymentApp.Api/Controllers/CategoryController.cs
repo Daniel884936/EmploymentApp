@@ -22,7 +22,8 @@ namespace EmploymentApp.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        IMapper _mapper;
+        private readonly IMapper _mapper;
+
         public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;

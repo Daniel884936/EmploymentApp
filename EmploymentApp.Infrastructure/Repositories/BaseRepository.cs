@@ -13,10 +13,8 @@ namespace EmploymentApp.Infrastructure.Repositories
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly DbSet<T> _entities;
-        private readonly EmploymentDbContext _context;
         public BaseRepository(EmploymentDbContext context)
         {
-            _context = context;
             _entities = context.Set<T>();
         }
 
