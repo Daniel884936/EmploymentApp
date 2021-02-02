@@ -36,6 +36,7 @@ namespace EmploymentApp.Api
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStatusService, StatusService>();
             services.AddTransient<IRoleServices, RoleService>();
+            services.AddTransient<ITypeScheduleService, TypeScheduleService>();
 
 
             services.AddControllers().AddNewtonsoftJson(options => {
