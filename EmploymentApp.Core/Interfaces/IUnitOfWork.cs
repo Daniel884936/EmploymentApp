@@ -1,7 +1,5 @@
 ﻿using EmploymentApp.Core.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmploymentApp.Core.Interfaces
@@ -12,7 +10,9 @@ namespace EmploymentApp.Core.Interfaces
          IRepository<Status> StatusRepository { get; }
          IRepository<Role> RoleRepository { get; }
          IRepository<TypeSchedule> TypeScheduleRepository { get; }
-         void SaveChanges();
+         IRepository<Job> JobRepository { get; }
+
+        void SaveChanges();
          Task SaveChangesAsync();
     }
 }

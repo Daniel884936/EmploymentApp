@@ -1,18 +1,16 @@
-﻿using AutoMapper;
+﻿using Ardalis.Result;
+using AutoMapper;
 using EmploymentApp.Api.Responses;
+using EmploymentApp.Api.Source;
 using EmploymentApp.Core.DTOs.CategoryDto;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Ardalis.Result;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using EmploymentApp.Api.Source;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace EmploymentApp.Api.Controllers
@@ -29,21 +27,21 @@ namespace EmploymentApp.Api.Controllers
             _categoryService = categoryService;
             _mapper = mapper;
         }
-        //TODO: resolver el problema del mesaje de retorno del status 500 y terminar los metodos restantes
+
         [HttpGet]
         public IActionResult GetCategories()
         {
+            ApiResponse<IEnumerable<CategoryReadDto>> response;
             var resultCategory = _categoryService.GetAll();
-            //Check if there are any arror 
-            if (resultCategory.Status == ResultStatus.Error) {
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>(), 
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]));
+            if (resultCategory.Status == ResultStatus.Error) 
+            {
+                response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>(),
+                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
-            var response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto,
+            response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto,
                 StringResponseMessages.SUCESS);
             return Ok(response);
         }
@@ -51,18 +49,17 @@ namespace EmploymentApp.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
+            ApiResponse<CategoryReadDto> response;
             var resultCategory = await _categoryService.GetById(id);
-
             if(resultCategory.Status == ResultStatus.Error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]));
+                response = new ApiResponse<CategoryReadDto>(null,
+                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
-
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
-            var response = new ApiResponse<CategoryReadDto>(categoryReadDto,
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto,
                 StringResponseMessages.SUCESS);
             return Ok(response);
         }
@@ -70,17 +67,17 @@ namespace EmploymentApp.Api.Controllers
         [HttpPost]
         public async Task <IActionResult> Post(CategoryDto categoryDto)
         {
+            ApiResponse<CategoryReadDto> response;
             var category = _mapper.Map<Category>(categoryDto);
             var resultCategory =  await _categoryService.Add(category);
             if (resultCategory.Status == ResultStatus.Error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]));
+                response = new ApiResponse<CategoryReadDto>(null,
+                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
-
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
-            var response = new ApiResponse<CategoryReadDto>(categoryReadDto,
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto,
                  StringResponseMessages.SUCESS);
             return Ok(response);
         }
@@ -88,23 +85,24 @@ namespace EmploymentApp.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(int id, CategoryDto categoryDto)
         {
+            ApiResponse<bool> response;
             var category = _mapper.Map<Category>(categoryDto);
             category.Id = id;
             var resultCategory =  await _categoryService.Update(category);
-
+            var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new ApiResponse<bool>(false,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]));
+                response = new ApiResponse<bool>(result,
+                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
             {
-                return NotFound(new ApiResponse<CategoryReadDto>(null, 
-                    StringResponseMessages.DOES_NOT_EXIST));
+                response = new ApiResponse<bool>(result,
+                    StringResponseMessages.DOES_NOT_EXIST); 
+                return NotFound(response);
             }
-            var result = resultCategory.Value;
-            var response = new ApiResponse<bool>(result,
+            response = new ApiResponse<bool>(result,
                  StringResponseMessages.SUCESS);
             return Ok(response);
         }
@@ -112,22 +110,22 @@ namespace EmploymentApp.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Detele(int id)
         {
+            ApiResponse<bool> response;
             var resultCategory =  await _categoryService.Remove(id);
-
+            var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new ApiResponse<bool>(false,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]));
+                response = new ApiResponse<bool>(result,
+                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
-
             if (resultCategory.Status == ResultStatus.NotFound)
             {
-                return NotFound(new ApiResponse<CategoryReadDto>(null,
-                    StringResponseMessages.DOES_NOT_EXIST));
+                response = new ApiResponse<bool>(result,
+                    StringResponseMessages.DOES_NOT_EXIST);
+                return NotFound(response);
             }
-            var result = resultCategory.Value;
-            var response = new ApiResponse<bool>(result,
+            response = new ApiResponse<bool>(result,
                  StringResponseMessages.SUCESS);
             return Ok(response);
         }

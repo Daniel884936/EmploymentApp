@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmploymentApp.Core.DTOs.StatusDtos
+﻿namespace EmploymentApp.Core.DTOs.StatusDtos
 {
     public class StatusReadDto
     {
