@@ -1,9 +1,6 @@
 ﻿using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmploymentApp.Infrastructure.Repositories
@@ -15,7 +12,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         private readonly IRepository<TypeSchedule> _typeScheduleRepository;
         private readonly IRepository<Status> _starusRepository;
         private readonly IRepository<Role> _roleRepository;
-        private readonly IRepository<Job> _jobRepository;
+        private readonly IJobRepository _jobRepository;
 
 
         public UnitOfWork(EmploymentDbContext context)
@@ -26,7 +23,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         public IRepository<TypeSchedule> TypeScheduleRepository => _typeScheduleRepository ?? new BaseRepository<TypeSchedule>(_context);
         public IRepository<Status> StatusRepository => _starusRepository ?? new BaseRepository<Status>(_context);
         public IRepository<Role> RoleRepository => _roleRepository ?? new BaseRepository<Role>(_context);
-        public IRepository<Job> JobRepository => _jobRepository?? new BaseRepository<Job>(_context);
+        public IJobRepository JobRepository => _jobRepository?? new JobRepository (_context);
 
         public void Dispose()
         {

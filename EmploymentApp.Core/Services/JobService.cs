@@ -34,7 +34,7 @@ namespace EmploymentApp.Core.Services
             IEnumerable<Job> jobs;
             try
             {
-                jobs = _unitOfWork.JobRepository.GetAll();
+                jobs = _unitOfWork.JobRepository.GetAllFullJob();
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace EmploymentApp.Core.Services
             Job job;
             try
             {
-                job = await _unitOfWork.JobRepository.GetById(id);
+                job = await _unitOfWork.JobRepository.GetFullJob(id);
             }
             catch (Exception ex)
             {
