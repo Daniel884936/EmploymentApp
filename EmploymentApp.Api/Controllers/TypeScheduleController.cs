@@ -18,6 +18,7 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITypeScheduleService _typeScheduleService;
+        private string responseMessage;
         public TypeScheduleController(IMapper mapper, ITypeScheduleService typeScheduleService)
         {
             _mapper = mapper;
@@ -31,14 +32,16 @@ namespace EmploymentApp.Api.Controllers
             var resutlTypeSchedule = _typeScheduleService.GetAll();
             if (resutlTypeSchedule.Status == ResultStatus.Error)
             {
+                responseMessage = resutlTypeSchedule.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(Array.Empty<TypeScheduleReadDto>(),
-                    resutlTypeSchedule.Errors.ElementAt((int)ErrorNum.First));
+                    responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var typeSchedule = resutlTypeSchedule.Value;
             var typeScheduleReadDto = _mapper.Map<IEnumerable<TypeScheduleReadDto>>(typeSchedule);
+            responseMessage = StringResponseMessages.SUCESS;
             response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(typeScheduleReadDto,
-                StringResponseMessages.SUCESS);
+               responseMessage);
             return Ok(response);
         }
     }

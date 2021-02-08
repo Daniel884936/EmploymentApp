@@ -12,9 +12,9 @@ namespace EmploymentApp.Core.Interfaces
          IRepository<TypeSchedule> TypeScheduleRepository { get; }
          IJobRepository JobRepository { get; }
          IUserRepository UserRepository { get; }
-         IRepository<UserLogin> UserLoginRepository { get; }
+         IUserLoginRepository UserLoginRepository { get; }
 
-        void SaveChanges();
+         void SaveChanges();
          Task SaveChangesAsync();
     }
 }

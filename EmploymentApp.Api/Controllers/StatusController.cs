@@ -18,6 +18,7 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly IStatusService _statusService;
         private readonly IMapper _mapper;
+        private string responseMessage;
         public StatusController(IStatusService statusService, IMapper mapper)
         {
             _statusService = statusService;
@@ -30,14 +31,15 @@ namespace EmploymentApp.Api.Controllers
            var resutlStatus = _statusService.GetAll();
             if(resutlStatus.Status == ResultStatus.Error)
             {
+                responseMessage = resutlStatus.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<StatusReadDto>>(Array.Empty<StatusReadDto>(),
-                    resutlStatus.Errors.ElementAt((int)ErrorNum.First));
+                    responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var status = resutlStatus.Value;
             var statusReadDto = _mapper.Map<IEnumerable<StatusReadDto>>(status);
-            response = new  ApiResponse<IEnumerable<StatusReadDto>>(statusReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new  ApiResponse<IEnumerable<StatusReadDto>>(statusReadDto,responseMessage);
             return Ok(response);
         }
     }

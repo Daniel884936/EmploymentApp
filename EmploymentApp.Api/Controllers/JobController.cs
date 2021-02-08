@@ -20,6 +20,7 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly IJobService _JobService;
         private readonly IMapper _mapper;
+        private string responseMessage;
         public JobController(IJobService JobService, IMapper mapper)
         {
             _JobService = JobService;
@@ -33,14 +34,15 @@ namespace EmploymentApp.Api.Controllers
             var resultJob = _JobService.GetAll();
             if (resultJob.Status == ResultStatus.Error)
             {
+                responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<JobReadDto>>(Array.Empty<JobReadDto>(),
-                    resultJob.Errors.ElementAt((int)ErrorNum.First));
+                    responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobs = resultJob.Value;
             var jobsReadDto = _mapper.Map<IEnumerable<JobReadDto>>(jobs);
-            response = new ApiResponse<IEnumerable<JobReadDto>>(jobsReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<IEnumerable<JobReadDto>>(jobsReadDto, responseMessage);
             return Ok(response);
         }
 
@@ -51,14 +53,14 @@ namespace EmploymentApp.Api.Controllers
             var resultJob = await _JobService.GetById(id);
             if (resultJob.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<JobReadDto>(null,
-                    resultJob.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<JobReadDto>(null,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var job = resultJob.Value;
             var jobReadDto = _mapper.Map<JobReadDto>(job);
-            response = new ApiResponse<JobReadDto>(jobReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<JobReadDto>(jobReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -70,13 +72,13 @@ namespace EmploymentApp.Api.Controllers
             var resultJob = await _JobService.Add(job);
             if (resultJob.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<JobReadDto>(null,
-                    resultJob.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<JobReadDto>(null,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobReadDto = _mapper.Map<JobReadDto>(job);
-            response = new ApiResponse<JobReadDto>(jobReadDto,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<JobReadDto>(jobReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -90,18 +92,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultJob.Value;
             if (resultJob.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultJob.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST);
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result,responseMessage);
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
 
@@ -113,18 +115,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultJob.Value;
             if (resultJob.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultJob.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST);
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result, responseMessage);
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
     }

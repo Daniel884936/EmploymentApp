@@ -20,11 +20,20 @@ namespace EmploymentApp.Core.Services
         {
             try
             {
+                var userLogin = user.UserLogin.ElementAt(0);
+                var userLoginDb = await _unitOfWork.UserLoginRepository.GetByEmail(userLogin.Email);
+                if (userLoginDb != null) {
+                    return Result<User>.Invalid(new List<ValidationError> { 
+                        new ValidationError { ErrorMessage = "User already exist"} 
+                    });
+                }
                 await _unitOfWork.UserRepository.Add(user);
                 await _unitOfWork.SaveChangesAsync();
-                var userLogin = user.UserLogin.ElementAt(0);
-                var userRole = await _unitOfWork.RoleRepository.GetById(userLogin.RoleId);
-                userLogin.Role.Name = userRole.Name;
+                //var userRole = await _unitOfWork.RoleRepository.GetById(userLogin.RoleId);
+                //userLogin.Role = userRole;
+                userLogin.Role = new Role {  
+                    Id = userLogin.RoleId, Name = UserRole(userLogin.RoleId)
+                };
             }
             catch (Exception ex)
             {
@@ -105,6 +114,15 @@ namespace EmploymentApp.Core.Services
             userToUpdate.Bithdate = user.Bithdate;
             userToUpdate.Name = user.Name;
             userToUpdate.Surnames = user.Surnames;
+        }
+
+        private string UserRole(int roleId)
+        {
+            Dictionary<int, string> roles = new Dictionary<int, string>
+            {
+                {1,"Admin"},{2,"Poster"},{3,"User" }
+            };
+            return roles[roleId];
         }
     }
 }

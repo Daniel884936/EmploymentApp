@@ -12,7 +12,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         private readonly IRepository<TypeSchedule> _typeScheduleRepository;
         private readonly IRepository<Status> _starusRepository;
         private readonly IRepository<Role> _roleRepository;
-        private readonly IRepository<UserLogin> _userLoginRepository;
+        private readonly IUserLoginRepository _userLoginRepository;
         private readonly IJobRepository _jobRepository;
         private readonly IUserRepository _userRepository;
 
@@ -28,7 +28,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         public IRepository<Role> RoleRepository => _roleRepository ?? new BaseRepository<Role>(_context);
         public IJobRepository JobRepository => _jobRepository?? new JobRepository (_context);
         public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
-        public IRepository<UserLogin> UserLoginRepository => _userLoginRepository ?? new BaseRepository<UserLogin>(_context);
+        public IUserLoginRepository UserLoginRepository => _userLoginRepository ?? new UserLoginRepository(_context);      
 
         public void Dispose()
         {

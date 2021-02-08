@@ -21,6 +21,7 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
+        private string responseMessage;
 
         public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
@@ -35,14 +36,16 @@ namespace EmploymentApp.Api.Controllers
             var resultCategory = _categoryService.GetAll();
             if (resultCategory.Status == ResultStatus.Error) 
             {
+                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>(),
-                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
+                   responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
+            responseMessage = StringResponseMessages.SUCESS;
             response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto,
-                StringResponseMessages.SUCESS);
+                responseMessage);
             return Ok(response);
         }
 
@@ -53,16 +56,17 @@ namespace EmploymentApp.Api.Controllers
             var resultCategory = await _categoryService.GetById(id);
             if(resultCategory.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<CategoryReadDto>(null,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
-            response = new ApiResponse<CategoryReadDto>(categoryReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto,responseMessage);
             return Ok(response);
         }
+
         
         [HttpPost]
         public async Task <IActionResult> Post(CategoryDto categoryDto)
@@ -72,13 +76,13 @@ namespace EmploymentApp.Api.Controllers
             var resultCategory =  await _categoryService.Add(category);
             if (resultCategory.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<CategoryReadDto>(null,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
-            response = new ApiResponse<CategoryReadDto>(categoryReadDto,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -92,18 +96,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result, responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST); 
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result,responseMessage); 
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
 
@@ -115,18 +119,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result, responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if (resultCategory.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST);
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result, responseMessage);
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
     }

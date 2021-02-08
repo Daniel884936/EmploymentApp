@@ -21,7 +21,8 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-      
+        private string responseMessage;
+
         public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
@@ -35,14 +36,15 @@ namespace EmploymentApp.Api.Controllers
             var resultUser = _userService.GetAll();
             if (resultUser.Status == ResultStatus.Error)
             {
+                responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<UserReadDto>>(Array.Empty<UserReadDto>(),
-                    resultUser.Errors.ElementAt((int)ErrorNum.First));
+                    responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var users = resultUser.Value;
             var usersReadDto = _mapper.Map<IEnumerable<UserReadDto>>(users);
-            response = new ApiResponse<IEnumerable<UserReadDto>>(usersReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<IEnumerable<UserReadDto>>(usersReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -53,15 +55,15 @@ namespace EmploymentApp.Api.Controllers
             var resultUser = await _userService.GetById(id);
             if (resultUser.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<UserReadDto>(null,
-                    resultUser.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<UserReadDto>(null,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var user = resultUser.Value;
             var userReadDto = _mapper.Map<UserReadDto>(user);
             userReadDto.Email = user.UserLogin.ElementAt((int)UserLoginNum.First).Email;
-            response = new ApiResponse<UserReadDto>(userReadDto,
-                StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<UserReadDto>(userReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -73,13 +75,19 @@ namespace EmploymentApp.Api.Controllers
             var resultUser = await _userService.Add(user);
             if (resultUser.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<UserReadDto>(null,
-                    resultUser.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<UserReadDto>(null, responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
+            if (resultUser.Status == ResultStatus.Invalid)
+            {
+                responseMessage = resultUser.ValidationErrors.ElementAt((int)ErrorNum.First).ErrorMessage;
+                response = new ApiResponse<UserReadDto>(null,responseMessage);
+                return Conflict(response);
+            }
             var userReadDto = _mapper.Map<UserReadDto>(user);
-            response = new ApiResponse<UserReadDto>(userReadDto,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<UserReadDto>(userReadDto,responseMessage);
             return Ok(response);
         }
 
@@ -93,18 +101,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultUser.Value;
             if (resultUser.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultUser.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result,responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultUser.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST);
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result, responseMessage);
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
 
@@ -116,18 +124,18 @@ namespace EmploymentApp.Api.Controllers
             var result = resultUser.Value;
             if (resultUser.Status == ResultStatus.Error)
             {
-                response = new ApiResponse<bool>(result,
-                    resultUser.Errors.ElementAt((int)ErrorNum.First));
+                responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);
+                response = new ApiResponse<bool>(result, responseMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultUser.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result,
-                    StringResponseMessages.DOES_NOT_EXIST);
+                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
+                response = new ApiResponse<bool>(result, responseMessage);
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result,
-                 StringResponseMessages.SUCESS);
+            responseMessage = StringResponseMessages.SUCESS;
+            response = new ApiResponse<bool>(result,responseMessage);
             return Ok(response);
         }
     }
