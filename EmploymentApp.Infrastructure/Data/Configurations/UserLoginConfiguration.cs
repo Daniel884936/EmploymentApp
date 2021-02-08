@@ -1,9 +1,6 @@
 ﻿using EmploymentApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EmploymentApp.Infrastructure.Data.Configurations
 {
@@ -29,6 +26,11 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(300)
                 .IsUnicode(false);
+
+            builder.HasOne(d => d.Role)
+                .WithMany(p => p.UserLogin)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_USERLOGIN_ROLE");
 
             builder.HasOne(d => d.User)
                 .WithMany(p => p.UserLogin)

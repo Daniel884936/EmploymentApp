@@ -10,5 +10,6 @@ namespace EmploymentApp.Core.Entities
     public partial class Role: BaseEntity
     {      
         public string Name { get; set; }
+        public virtual ICollection<UserLogin> UserLogin { get; set; }
     }
 }

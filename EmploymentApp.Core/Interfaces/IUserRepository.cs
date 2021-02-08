@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmploymentApp.Core.Interfaces
 {
-    public interface IJobRepository: IRepository<Job>
+    public interface IUserRepository: IRepository<User>
     {
-        Task<Job> GetFullJob(int jobId);
-        IEnumerable<Job> GetFullJobs();
+        Task<User> GetFullUser(int userId);
+        IEnumerable<User> GetFullUsers();
     }
 }

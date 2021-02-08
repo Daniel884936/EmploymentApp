@@ -36,7 +36,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error) 
             {
                 response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>(),
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var categories = resultCategory.Value;
@@ -54,7 +54,7 @@ namespace EmploymentApp.Api.Controllers
             if(resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var cartegory = resultCategory.Value;
@@ -73,7 +73,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<CategoryReadDto>(null,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
@@ -93,7 +93,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
@@ -116,7 +116,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result,
-                    resultCategory.Errors.ToList()[(int)ErrorNum.First]);
+                    resultCategory.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if (resultCategory.Status == ResultStatus.NotFound)

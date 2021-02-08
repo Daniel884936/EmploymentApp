@@ -31,7 +31,7 @@ namespace EmploymentApp.Api.Controllers
             if(resutlStatus.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<IEnumerable<StatusReadDto>>(Array.Empty<StatusReadDto>(),
-                    resutlStatus.Errors.ToList()[(int)ErrorNum.First]);
+                    resutlStatus.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var status = resutlStatus.Value;

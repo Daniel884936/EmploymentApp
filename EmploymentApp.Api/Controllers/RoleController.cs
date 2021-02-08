@@ -32,7 +32,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultRoles.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>(),
-                    resultRoles.Errors.ToList()[(int)ErrorNum.First]);
+                    resultRoles.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var roles = resultRoles.Value;

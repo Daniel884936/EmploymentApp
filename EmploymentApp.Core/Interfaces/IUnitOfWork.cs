@@ -11,6 +11,8 @@ namespace EmploymentApp.Core.Interfaces
          IRepository<Role> RoleRepository { get; }
          IRepository<TypeSchedule> TypeScheduleRepository { get; }
          IJobRepository JobRepository { get; }
+         IUserRepository UserRepository { get; }
+         IRepository<UserLogin> UserLoginRepository { get; }
 
         void SaveChanges();
          Task SaveChangesAsync();

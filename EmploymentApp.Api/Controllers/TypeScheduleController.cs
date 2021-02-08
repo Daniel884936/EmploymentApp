@@ -32,7 +32,7 @@ namespace EmploymentApp.Api.Controllers
             if (resutlTypeSchedule.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(Array.Empty<TypeScheduleReadDto>(),
-                    resutlTypeSchedule.Errors.ToList()[(int)ErrorNum.First]);
+                    resutlTypeSchedule.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var typeSchedule = resutlTypeSchedule.Value;

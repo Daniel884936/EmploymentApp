@@ -1,10 +1,8 @@
 ﻿using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +12,7 @@ namespace EmploymentApp.Infrastructure.Repositories
     {
         public JobRepository(EmploymentDbContext context) :base(context) {}
 
-        public IEnumerable<Job> GetAllFullJob()
+        public IEnumerable<Job> GetFullJobs()
         {
             var fullJobs = _entities.Include(x => x.Category)
                 .Include(x => x.Status)

@@ -34,7 +34,7 @@ namespace EmploymentApp.Core.Services
             IEnumerable<Job> jobs;
             try
             {
-                jobs = _unitOfWork.JobRepository.GetAllFullJob();
+                jobs = _unitOfWork.JobRepository.GetFullJobs();
             }
             catch (Exception ex)
             {
@@ -85,6 +85,7 @@ namespace EmploymentApp.Core.Services
                 if (jobTraking == null)
                     return Result<bool>.NotFound();
                 SetJobToUpdate(jobTraking, job);
+                _unitOfWork.JobRepository.Update(jobTraking);
                 await _unitOfWork.SaveChangesAsync();
             }
             catch (Exception ex)

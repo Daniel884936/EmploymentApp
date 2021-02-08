@@ -34,7 +34,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<IEnumerable<JobReadDto>>(Array.Empty<JobReadDto>(),
-                    resultJob.Errors.ToList()[(int)ErrorNum.First]);
+                    resultJob.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobs = resultJob.Value;
@@ -52,7 +52,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<JobReadDto>(null,
-                    resultJob.Errors.ToList()[(int)ErrorNum.First]);
+                    resultJob.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var job = resultJob.Value;
@@ -71,7 +71,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<JobReadDto>(null,
-                    resultJob.Errors.ToList()[(int)ErrorNum.First]);
+                    resultJob.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobReadDto = _mapper.Map<JobReadDto>(job);
@@ -91,7 +91,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result,
-                    resultJob.Errors.ToList()[(int)ErrorNum.First]);
+                    resultJob.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
@@ -114,7 +114,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result,
-                    resultJob.Errors.ToList()[(int)ErrorNum.First]);
+                    resultJob.Errors.ElementAt((int)ErrorNum.First));
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
