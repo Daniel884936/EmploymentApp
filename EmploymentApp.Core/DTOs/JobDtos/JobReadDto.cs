@@ -9,8 +9,8 @@ namespace EmploymentApp.Core.DTOs.JobDtos
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public CategoryReadDto Category { get; set; }
-        public  StatusReadDto Status { get; set; }
-        public TypeScheduleReadDto TypeSchedule { get; set; }
+        public string Category { get; set; }
+        public string Status { get; set; }
+        public string TypeSchedule { get; set; }
     }
 }

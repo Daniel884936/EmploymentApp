@@ -33,7 +33,13 @@ namespace EmploymentApp.Infrastructure.Mappings
         private void JobMap()
         {
             CreateMap<JobDto, Job>();
-            CreateMap<Job, JobReadDto>();
+
+            CreateMap<Job, JobReadDto>().ForMember(dest =>
+            dest.Category, opt => opt.MapFrom(x => x.Category.Name))
+                .ForMember(dest =>
+            dest.Status, opt => opt.MapFrom(x => x.Status.Name))
+                .ForMember(dest =>
+            dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name));
         }
         private void UserMap()
         {
