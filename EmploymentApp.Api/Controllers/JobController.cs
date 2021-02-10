@@ -5,6 +5,7 @@ using EmploymentApp.Api.Source;
 using EmploymentApp.Core.DTOs.JobDtos;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
+using EmploymentApp.Core.QueryFilters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -28,10 +29,10 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetJobs()
+        public IActionResult GetJobs([FromQuery]JobQueryFilter jobQueryFilter)
         {
             ApiResponse<IEnumerable<JobReadDto>> response;
-            var resultJob = _JobService.GetAll();
+            var resultJob = _JobService.GetAll(jobQueryFilter);
             if (resultJob.Status == ResultStatus.Error)
             {
                 responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);

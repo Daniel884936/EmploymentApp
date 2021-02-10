@@ -1,9 +1,12 @@
 ﻿using Ardalis.Result;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
+using EmploymentApp.Core.QueryFilters;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using EmploymentApp.Core.DataFilter;
 
 namespace EmploymentApp.Core.Services
 {
@@ -19,6 +22,7 @@ namespace EmploymentApp.Core.Services
         {
             try
             {
+                job.Date = DateTime.Now;
                 await _unitOfWork.JobRepository.Add(job);
                 await _unitOfWork.SaveChangesAsync();
             }
@@ -29,12 +33,16 @@ namespace EmploymentApp.Core.Services
             return Result<Job>.Success(job);
         }
 
-        public Result<IEnumerable<Job>> GetAll()
+        public Result<IEnumerable<Job>> GetAll(JobQueryFilter jobQueryFilter)
         {
-            IEnumerable<Job> jobs;
+            IQueryable<Job> jobs;
             try
             {
                 jobs = _unitOfWork.JobRepository.GetFullJobs();
+                if (jobs != null)
+                {
+                    jobs = JobDataFilter.FilterJobs(jobQueryFilter, jobs);
+                }
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +13,12 @@ namespace EmploymentApp.Infrastructure.Repositories
     {
         public JobRepository(EmploymentDbContext context) :base(context) {}
 
-        public IEnumerable<Job> GetFullJobs()
+        public IQueryable<Job> GetFullJobs()
         {
             var fullJobs = _entities.Include(x => x.Category)
                 .Include(x => x.Status)
-                .Include(x => x.TypeSchedule).AsEnumerable();
+                .Include(x => x.TypeSchedule).OrderByDescending(x=>
+                x.Date <= DateTime.Now).AsQueryable();
             return fullJobs;
         }
 

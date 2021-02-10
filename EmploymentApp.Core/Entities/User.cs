@@ -16,6 +16,7 @@ namespace EmploymentApp.Core.Entities
         public string Name { get; set; }
         public string Surnames { get; set; }
         public DateTime Bithdate { get; set; }
+        public virtual ICollection<Job> Job { get; set; }
         public virtual ICollection<UserLogin> UserLogin { get; set; }
     }
 }

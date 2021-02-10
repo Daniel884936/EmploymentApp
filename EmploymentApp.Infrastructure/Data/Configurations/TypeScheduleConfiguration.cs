@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using EmploymentApp.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using EmploymentApp.Core.Entities;
 
 namespace EmploymentApp.Infrastructure.Data.Configurations
 {
