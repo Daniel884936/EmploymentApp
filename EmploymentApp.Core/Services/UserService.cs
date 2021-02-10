@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using EmploymentApp.Core.QueryFilters;
+using EmploymentApp.Core.DataFilter;
 
 namespace EmploymentApp.Core.Services
 {
@@ -42,12 +44,16 @@ namespace EmploymentApp.Core.Services
             return Result<User>.Success(user);
         }
 
-        public Result<IEnumerable<User>> GetAll()
+        public Result<IEnumerable<User>> GetAll(UserQueryFilter userQueryFilter)
         {
             IEnumerable<User> users;
             try
             {
                 users = _unitOfWork.UserRepository.GetFullUsers();
+                if (users != null)
+                {
+                    users = UserDataFilter.FilterUsers(users, userQueryFilter);
+                }
             }
             catch (Exception ex)
             {

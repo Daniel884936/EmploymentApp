@@ -10,6 +10,6 @@ namespace EmploymentApp.Core.Interfaces
     public interface IJobRepository: IRepository<Job>
     {
         Task<Job> GetFullJob(int jobId);
-        IQueryable<Job> GetFullJobs();
+        IEnumerable<Job> GetFullJobs();
     }
 }

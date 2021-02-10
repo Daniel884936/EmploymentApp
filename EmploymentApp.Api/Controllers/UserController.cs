@@ -6,6 +6,7 @@ using EmploymentApp.Api.Source.Enums;
 using EmploymentApp.Core.DTOs.UserDtos;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
+using EmploymentApp.Core.QueryFilters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,10 +31,10 @@ namespace EmploymentApp.Api.Controllers
             
         }
          [HttpGet]
-        public IActionResult GetUsers()
+        public IActionResult GetUsers([FromQuery] UserQueryFilter userQueryFilter)
         {
             ApiResponse<IEnumerable<UserReadDto>> response;
-            var resultUser = _userService.GetAll();
+            var resultUser = _userService.GetAll(userQueryFilter);
             if (resultUser.Status == ResultStatus.Error)
             {
                 responseMessage = resultUser.Errors.ElementAt((int)ErrorNum.First);

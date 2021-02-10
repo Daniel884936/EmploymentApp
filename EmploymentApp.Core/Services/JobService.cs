@@ -35,13 +35,13 @@ namespace EmploymentApp.Core.Services
 
         public Result<IEnumerable<Job>> GetAll(JobQueryFilter jobQueryFilter)
         {
-            IQueryable<Job> jobs;
+            IEnumerable<Job> jobs;
             try
             {
                 jobs = _unitOfWork.JobRepository.GetFullJobs();
                 if (jobs != null)
                 {
-                    jobs = JobDataFilter.FilterJobs(jobQueryFilter, jobs);
+                    jobs = JobDataFilter.FilterJobs(jobs, jobQueryFilter);
                 }
             }
             catch (Exception ex)
