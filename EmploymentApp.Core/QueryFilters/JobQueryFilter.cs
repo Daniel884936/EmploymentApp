@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EmploymentApp.Core.QueryFilters
 {
-    public class JobQueryFilter
+    public class JobQueryFilter: BaseQueryFilter
     {
         public string Company { get; set; }
         public string Title { get; set; }

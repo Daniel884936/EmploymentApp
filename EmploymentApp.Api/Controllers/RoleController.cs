@@ -33,14 +33,19 @@ namespace EmploymentApp.Api.Controllers
             if (resultRoles.Status == ResultStatus.Error)
             {
                 responseMessage = resultRoles.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>(),
-                    responseMessage);
+                response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>()) 
+                {
+                    Message = responseMessage 
+                }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var roles = resultRoles.Value;
             var roleReadDto = _mapper.Map<IEnumerable<RoleReadDto>>(roles);
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<IEnumerable<RoleReadDto>>(roleReadDto,responseMessage);
+            response = new ApiResponse<IEnumerable<RoleReadDto>>(roleReadDto)
+            {
+                Message = responseMessage 
+            };
             return Ok(response);
         }
     }

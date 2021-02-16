@@ -1,20 +1,23 @@
 ﻿using Ardalis.Result;
+using EmploymentApp.Core.CustomEntities;
+using EmploymentApp.Core.DataFilter;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.QueryFilters;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
-using EmploymentApp.Core.DataFilter;
 
 namespace EmploymentApp.Core.Services
 {
     public class JobService: IJobService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public JobService(IUnitOfWork unitOfWork)
+        private readonly PaginationOptions _paginationOptions;
+        public JobService(IUnitOfWork unitOfWork, IOptions<PaginationOptions> options)
         {
+            _paginationOptions = options.Value;
             _unitOfWork = unitOfWork;
         }
 
@@ -33,22 +36,30 @@ namespace EmploymentApp.Core.Services
             return Result<Job>.Success(job);
         }
 
-        public Result<IEnumerable<Job>> GetAll(JobQueryFilter jobQueryFilter)
+        public Result<PagedList<Job>> GetAll(JobQueryFilter filter)
         {
             IEnumerable<Job> jobs;
+            PagedList<Job> pagedJobs = null;
             try
             {
                 jobs = _unitOfWork.JobRepository.GetFullJobs();
                 if (jobs != null)
+                    jobs = JobDataFilter.FilterJobs(jobs, filter);
+
+                if (jobs != null)
                 {
-                    jobs = JobDataFilter.FilterJobs(jobs, jobQueryFilter);
+                    filter.PageNumber = filter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filter.PageNumber;
+                    filter.PageSize = filter.PageSize == 0 ? _paginationOptions.DefaultPageSize : filter.PageSize;
+
+                    pagedJobs = PagedList<Job>.Create(jobs,
+                        filter.PageNumber, filter.PageSize);
                 }
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Job>>.Error(new[] { ex.Message });
+                return Result<PagedList<Job>>.Error(new[] { ex.Message });
             }
-            var result = Result<IEnumerable<Job>>.Success(jobs);
+            var result = Result<PagedList<Job>>.Success(pagedJobs);
             return result;
         }
 

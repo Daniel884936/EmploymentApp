@@ -37,15 +37,18 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error) 
             {
                 responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>(),
-                   responseMessage);
+                response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>())
+                {
+                    Message = responseMessage 
+                }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto,
-                responseMessage);
+            response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto) { 
+                Message = responseMessage
+            };
             return Ok(response);
         }
 
@@ -57,13 +60,13 @@ namespace EmploymentApp.Api.Controllers
             if(resultCategory.Status == ResultStatus.Error)
             {
                 responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<CategoryReadDto>(null,responseMessage);
+                response = new ApiResponse<CategoryReadDto>(null) { Message = responseMessage }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<CategoryReadDto>(categoryReadDto,responseMessage);
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto) { Message = responseMessage }; 
             return Ok(response);
         }
 
@@ -77,12 +80,14 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<CategoryReadDto>(null,responseMessage);
+                response = new ApiResponse<CategoryReadDto>(null) {Message = responseMessage};
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<CategoryReadDto>(categoryReadDto,responseMessage);
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
+            Message = responseMessage
+            };
             return Ok(response);
         }
 
@@ -97,17 +102,17 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<bool>(result, responseMessage);
+                response = new ApiResponse<bool>(result) { Message = responseMessage };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
             {
                 responseMessage = StringResponseMessages.DOES_NOT_EXIST;
-                response = new ApiResponse<bool>(result,responseMessage); 
+                response = new ApiResponse<bool>(result) { Message = responseMessage }; 
                 return NotFound(response);
             }
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<bool>(result,responseMessage);
+            response = new ApiResponse<bool>(result) { Message = responseMessage }; 
             return Ok(response);
         }
 
@@ -120,17 +125,17 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<bool>(result, responseMessage);
+                response = new ApiResponse<bool>(result) { Message = responseMessage }; ;
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if (resultCategory.Status == ResultStatus.NotFound)
             {
                 responseMessage = StringResponseMessages.DOES_NOT_EXIST;
-                response = new ApiResponse<bool>(result, responseMessage);
+                response = new ApiResponse<bool>(result) { Message = responseMessage }; 
                 return NotFound(response);
             }
             responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<bool>(result,responseMessage);
+            response = new ApiResponse<bool>(result) { Message = responseMessage }; 
             return Ok(response);
         }
     }

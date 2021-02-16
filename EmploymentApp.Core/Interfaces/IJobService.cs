@@ -1,4 +1,5 @@
 ﻿using Ardalis.Result;
+using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.QueryFilters;
 using System;
@@ -12,7 +13,7 @@ namespace EmploymentApp.Core.Interfaces
     public interface IJobService
     {
         Task<Result<Job>> Add(Job job);
-        Result<IEnumerable<Job>> GetAll(JobQueryFilter jobQueryFilter);
+        Result<PagedList<Job>> GetAll(JobQueryFilter jobQueryFilter);
         Task<Result<Job>> GetById(int id);
         Task<Result<bool>> Remove(int id);
         Task<Result<bool>> Update(Job job);

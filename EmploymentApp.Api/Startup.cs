@@ -1,13 +1,18 @@
 using AutoMapper;
+using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.Services;
 using EmploymentApp.Infrastructure.Data;
+using EmploymentApp.Infrastructure.Interfaces;
 using EmploymentApp.Infrastructure.Repositories;
+using EmploymentApp.Infrastructure.Serices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 
@@ -30,8 +35,17 @@ namespace EmploymentApp.Api
                 options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
 
-            //services.AddTransient<ICategoryRepository, CategoryRepository>();
-            //services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IUriService>(provider =>
+            {
+                var accessor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(absoluteUri);
+            }); 
+
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStatusService, StatusService>();
@@ -40,8 +54,6 @@ namespace EmploymentApp.Api
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<IUserService, UserService>();
           
-
-
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EmploymentApp.Core.QueryFilters
 {
-    public class UserQueryFilter
+    public class UserQueryFilter: BaseQueryFilter 
     {
         public string Name { get; set; }
         public string Surnames { get; set; }

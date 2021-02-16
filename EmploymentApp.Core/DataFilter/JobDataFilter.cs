@@ -29,16 +29,16 @@ namespace EmploymentApp.Core.DataFilter
         }
 
         private static IEnumerable<Job> FilterByCategory(IEnumerable<Job> jobs, string category) =>
-            jobs.Where(x => x.Category.Name.ToLower().Contains(category.ToLower()));
+            jobs.Where(x => x.Category.Name.ToLower().Trim().Contains(category.ToLower()));
             
         private static IEnumerable<Job> FilterByCompany(IEnumerable<Job> jobs, string company) =>
-            jobs.Where(x =>x.Company.ToLower().Contains(company.ToLower()));
+            jobs.Where(x =>x.Company.ToLower().Trim().Contains(company.ToLower()));
 
         private static IEnumerable<Job> FilterByTitle(IEnumerable<Job> jobs, string title) =>
-            jobs.Where(x => x.Title.ToLower().Contains(title.ToLower()));
+            jobs.Where(x => x.Title.ToLower().Trim().Contains(title.ToLower()));
 
         private static IEnumerable<Job> FilterByTypeSchedule(IEnumerable<Job> jobs, string typeSchedule) =>
-            jobs.Where(x => x.Title.ToLower().Contains(typeSchedule.ToLower()));
+            jobs.Where(x => x.Title.ToLower().Trim().Contains(typeSchedule.ToLower()));
 
         private static IEnumerable<Job> FilterByDate(IEnumerable<Job> jobs, DateTime? date) =>
             jobs.Where(x => x.Date <= date);

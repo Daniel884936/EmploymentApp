@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 using System.Linq;
 using EmploymentApp.Core.QueryFilters;
 using EmploymentApp.Core.DataFilter;
+using EmploymentApp.Core.CustomEntities;
+using Microsoft.Extensions.Options;
 
 namespace EmploymentApp.Core.Services
 {
     public class UserService: IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly PaginationOptions _paginationOptions; 
+        public UserService(IUnitOfWork unitOfWork, IOptions<PaginationOptions>options)
         {
             _unitOfWork = unitOfWork;
+            _paginationOptions = options.Value;
         }
 
         public async Task<Result<User>> Add(User user)
@@ -44,22 +48,31 @@ namespace EmploymentApp.Core.Services
             return Result<User>.Success(user);
         }
 
-        public Result<IEnumerable<User>> GetAll(UserQueryFilter userQueryFilter)
+        public Result<PagedList<User>> GetAll(UserQueryFilter filter)
         {
             IEnumerable<User> users;
+            PagedList<User> pagedUsers = null;
             try
             {
                 users = _unitOfWork.UserRepository.GetFullUsers();
                 if (users != null)
                 {
-                    users = UserDataFilter.FilterUsers(users, userQueryFilter);
+                    users = UserDataFilter.FilterUsers(users, filter);
+                }
+                if (users != null)
+                {
+                    filter.PageNumber = filter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filter.PageNumber;
+                    filter.PageSize = filter.PageSize == 0 ? _paginationOptions.DefaultPageSize : filter.PageSize;
+
+                    pagedUsers = PagedList<User>.Create(users,
+                        filter.PageNumber, filter.PageSize);
                 }
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<User>>.Error(new[] { ex.Message });
+                return Result<PagedList<User>>.Error(new[] { ex.Message });
             }
-            var result = Result<IEnumerable<User>>.Success(users);
+            var result = Result<PagedList<User>>.Success(pagedUsers);
             return result;
         }
 

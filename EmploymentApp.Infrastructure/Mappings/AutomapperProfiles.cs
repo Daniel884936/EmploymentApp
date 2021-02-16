@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.DTOs.CategoryDto;
 using EmploymentApp.Core.DTOs.JobDtos;
 using EmploymentApp.Core.DTOs.RoleDtos;
@@ -15,22 +16,23 @@ namespace EmploymentApp.Infrastructure.Mappings
     {
         public AutomapperProfiles()
         {
-            CategoryMap();
-            StatusMap();
-            TypeScheduleMap();
-            RoleMap();
-            JobMap();
-            UserMap();
+            MapCategory();
+            MapStatus();
+            MapTypeSchedule();
+            MapRole();
+            MapJob();
+            MapUser();
+            MapMetadata();
         }
-        private void CategoryMap()
+        private void MapCategory()
         {
             CreateMap<CategoryDto, Category>();
             CreateMap<Category, CategoryReadDto>();
         }
-        private void StatusMap() => CreateMap<Status, StatusReadDto>();
-        private void RoleMap() => CreateMap<Role, RoleReadDto>();
-        private void TypeScheduleMap() => CreateMap<TypeSchedule, TypeScheduleReadDto>();
-        private void JobMap()
+        private void MapStatus() => CreateMap<Status, StatusReadDto>();
+        private void MapRole() => CreateMap<Role, RoleReadDto>();
+        private void MapTypeSchedule() => CreateMap<TypeSchedule, TypeScheduleReadDto>();
+        private void MapJob()
         {
             CreateMap<JobDto, Job>();
 
@@ -41,7 +43,7 @@ namespace EmploymentApp.Infrastructure.Mappings
                 .ForMember(dest =>
             dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name));
         }
-        private void UserMap()
+        private void MapUser()
         {
            CreateMap<User, UserReadDto>().ForMember(dest =>
            dest.Email, opt => opt.MapFrom(x =>
@@ -58,6 +60,12 @@ namespace EmploymentApp.Infrastructure.Mappings
                }
            }));
            CreateMap<UserDto, User>();
+        }
+
+        private void MapMetadata()
+        {
+            CreateMap<PagedList<Job>, Metadata>();
+            CreateMap<PagedList<User>, Metadata>();
         }
 
     }
