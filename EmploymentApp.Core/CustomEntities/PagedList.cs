@@ -11,7 +11,7 @@ namespace EmploymentApp.Core.CustomEntities
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
         public bool HasPreviousPage => CurrentPage > 1;
-        public bool HasNextPage => CurrentPage < (int)Math.Ceiling(TotalCount/ (double)PageSize);
+        public bool HasNextPage => CurrentPage < TotalPages;
         public int? NextPageNumber => HasNextPage ? CurrentPage + 1 : (int?)null;
         public int? PreviosPageNumber => HasPreviousPage ? CurrentPage - 1 : (int?)null; 
 

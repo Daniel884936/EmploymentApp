@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System;
 
 namespace EmploymentApp.Api
@@ -53,6 +54,11 @@ namespace EmploymentApp.Api
             services.AddTransient<ITypeScheduleService, TypeScheduleService>();
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1", new OpenApiInfo{Title="EmploymentApp Api", Version ="v1" }); ;
+            });
           
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -69,6 +75,10 @@ namespace EmploymentApp.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(options => {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "EmploymentApp Api");
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();
