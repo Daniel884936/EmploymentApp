@@ -26,6 +26,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<RoleReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Roles()
         {
             ApiResponse<IEnumerable<RoleReadDto>> response;

@@ -24,7 +24,11 @@ namespace EmploymentApp.Api.Controllers
             _statusService = statusService;
             _mapper = mapper;
         }
+
+
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<StatusReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Status()
         {
            ApiResponse<IEnumerable<StatusReadDto>> response;

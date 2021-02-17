@@ -34,7 +34,10 @@ namespace EmploymentApp.Api.Controllers
             _uriService = uriService;
             
         }
-         [HttpGet]
+
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<UserReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetUsers([FromQuery] UserQueryFilter filter)
         {
             ApiResponse<IEnumerable<UserReadDto>> response;
@@ -63,6 +66,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetUser(int id)
         {
             ApiResponse<UserReadDto> response;
@@ -82,6 +87,9 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Post(UserCreateDto userCreateDto)
         {
             ApiResponse<UserReadDto> response;
@@ -106,6 +114,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(int id, UserDto userDto)
         {
             ApiResponse<bool> response;
@@ -131,6 +141,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;

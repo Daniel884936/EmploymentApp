@@ -30,6 +30,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<CategoryReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<CategoryReadDto>>), StatusCodes.Status500InternalServerError)]
         public IActionResult GetCategories()
         {
             ApiResponse<IEnumerable<CategoryReadDto>> response;
@@ -52,7 +54,10 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCategory(int id)
         {
             ApiResponse<CategoryReadDto> response;
@@ -72,6 +77,8 @@ namespace EmploymentApp.Api.Controllers
 
         
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task <IActionResult> Post(CategoryDto categoryDto)
         {
             ApiResponse<CategoryReadDto> response;
@@ -92,6 +99,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(int id, CategoryDto categoryDto)
         {
             ApiResponse<bool> response;
@@ -116,7 +125,10 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;

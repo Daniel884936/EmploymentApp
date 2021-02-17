@@ -33,6 +33,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<JobReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetJobs([FromQuery]JobQueryFilter filter)
         {
             ApiResponse<IEnumerable<JobReadDto>> response;
@@ -60,9 +62,9 @@ namespace EmploymentApp.Api.Controllers
         }
 
 
-
-
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetJob(int id)
         {
             ApiResponse<JobReadDto> response;
@@ -81,6 +83,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(JobDto jobDto)
         {
             ApiResponse<JobReadDto> response;
@@ -99,6 +103,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(int id, JobDto jobDto)
         {
             ApiResponse<bool> response;
@@ -124,6 +130,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;

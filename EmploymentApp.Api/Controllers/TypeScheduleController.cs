@@ -26,6 +26,8 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<TypeScheduleReadDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult TypeSchedules()
         {
             ApiResponse<IEnumerable<TypeScheduleReadDto>> response;
