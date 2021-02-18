@@ -3,8 +3,8 @@
     public class JobDto:JobBaseDto
     {
        
-        public int CategoryId { get; set; }
-        public int TypeScheduleId { get; set; }
-        public int StatusId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? TypeScheduleId { get; set; }
+        public int? StatusId { get; set; }
     }
 }

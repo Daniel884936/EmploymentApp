@@ -93,7 +93,9 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 responseMessage = resultJob.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<JobReadDto>(null) { Message = responseMessage };
+                response = new ApiResponse<JobReadDto>(null) { 
+                    Message = responseMessage
+                };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobReadDto = _mapper.Map<JobReadDto>(job);

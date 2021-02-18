@@ -56,7 +56,7 @@ namespace EmploymentApp.Infrastructure.Mappings
                new UserLogin {
                    Password = x.Password,
                    Email = x.Email,
-                   RoleId = x.RoleId
+                   RoleId = (int)x.RoleId
                }
            }));
            CreateMap<UserDto, User>();

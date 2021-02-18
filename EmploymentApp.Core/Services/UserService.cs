@@ -38,7 +38,7 @@ namespace EmploymentApp.Core.Services
                 //var userRole = await _unitOfWork.RoleRepository.GetById(userLogin.RoleId);
                 //userLogin.Role = userRole;
                 userLogin.Role = new Role {  
-                    Id = userLogin.RoleId, Name = UserRole(userLogin.RoleId)
+                    Id = (int)userLogin.RoleId, Name = UserRole((int)userLogin.RoleId)
                 };
             }
             catch (Exception ex)

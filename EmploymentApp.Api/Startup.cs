@@ -6,13 +6,13 @@ using EmploymentApp.Infrastructure.Data;
 using EmploymentApp.Infrastructure.Interfaces;
 using EmploymentApp.Infrastructure.Repositories;
 using EmploymentApp.Infrastructure.Serices;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
@@ -54,6 +54,10 @@ namespace EmploymentApp.Api
             services.AddTransient<ITypeScheduleService, TypeScheduleService>();
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddMvc().AddFluentValidation(options => {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+                });
 
             services.AddSwaggerGen(doc =>
             {

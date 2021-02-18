@@ -9,7 +9,7 @@ namespace EmploymentApp.Api.Responses
     {
         public T Data { get; set; }
         public string Message { get; set; }
-        public ApiResponse(T data )
+    public ApiResponse(T data )
         {
             Data = data;
         }
