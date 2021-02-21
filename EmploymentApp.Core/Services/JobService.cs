@@ -28,6 +28,7 @@ namespace EmploymentApp.Core.Services
                 job.Date = DateTime.Now;
                 await _unitOfWork.JobRepository.Add(job);
                 await _unitOfWork.SaveChangesAsync();
+                job = await _unitOfWork.JobRepository.GetFullJob(job.Id);
             }
             catch (Exception ex)
             {

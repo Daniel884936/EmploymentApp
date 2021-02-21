@@ -1,14 +1,13 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using EmploymentApp.Api.Responses;
-using EmploymentApp.Api.Source;
 using EmploymentApp.Core.DTOs.RoleDtos;
 using EmploymentApp.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 
 namespace EmploymentApp.Api.Controllers
 {
@@ -18,7 +17,6 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly IRoleServices _roleService;
         private readonly IMapper _mapper;
-        private string responseMessage;
         public RoleController(IRoleServices roleService, IMapper mapper)
         {
             _roleService = roleService;
@@ -27,26 +25,25 @@ namespace EmploymentApp.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<RoleReadDto>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<RoleReadDto>>), StatusCodes.Status500InternalServerError)]
         public IActionResult Roles()
         {
             ApiResponse<IEnumerable<RoleReadDto>> response;
             var resultRoles = _roleService.GetAll();
             if (resultRoles.Status == ResultStatus.Error)
             {
-                responseMessage = resultRoles.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>()) 
                 {
-                    Message = responseMessage 
+                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Errors  = resultRoles.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var roles = resultRoles.Value;
             var roleReadDto = _mapper.Map<IEnumerable<RoleReadDto>>(roles);
-            responseMessage = StringResponseMessages.SUCESS;
             response = new ApiResponse<IEnumerable<RoleReadDto>>(roleReadDto)
             {
-                Message = responseMessage 
+                Message = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }

@@ -35,11 +35,7 @@ namespace EmploymentApp.Core.Services
                 }
                 await _unitOfWork.UserRepository.Add(user);
                 await _unitOfWork.SaveChangesAsync();
-                //var userRole = await _unitOfWork.RoleRepository.GetById(userLogin.RoleId);
-                //userLogin.Role = userRole;
-                userLogin.Role = new Role {  
-                    Id = (int)userLogin.RoleId, Name = UserRole((int)userLogin.RoleId)
-                };
+                user = await _unitOfWork.UserRepository.GetFullUser(user.Id);
             }
             catch (Exception ex)
             {
@@ -133,15 +129,6 @@ namespace EmploymentApp.Core.Services
             userToUpdate.Bithdate = user.Bithdate;
             userToUpdate.Name = user.Name;
             userToUpdate.Surnames = user.Surnames;
-        }
-
-        private string UserRole(int roleId)
-        {
-            Dictionary<int, string> roles = new Dictionary<int, string>
-            {
-                {1,"Admin"},{2,"Poster"},{3,"User" }
-            };
-            return roles[roleId];
         }
     }
 }

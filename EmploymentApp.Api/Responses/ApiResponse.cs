@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EmploymentApp.Api.Responses
 {
@@ -9,7 +6,8 @@ namespace EmploymentApp.Api.Responses
     {
         public T Data { get; set; }
         public string Message { get; set; }
-    public ApiResponse(T data )
+        public IEnumerable<string> Errors { get; set; }
+        public ApiResponse(T data )
         {
             Data = data;
         }

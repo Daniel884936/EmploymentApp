@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using EmploymentApp.Api.Responses;
-using EmploymentApp.Api.Source;
 using EmploymentApp.Core.DTOs.CategoryDto;
 using EmploymentApp.Core.Entities;
 using EmploymentApp.Core.Interfaces;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -21,7 +20,6 @@ namespace EmploymentApp.Api.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
-        private string responseMessage;
 
         public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
@@ -38,18 +36,17 @@ namespace EmploymentApp.Api.Controllers
             var resultCategory = _categoryService.GetAll();
             if (resultCategory.Status == ResultStatus.Error) 
             {
-                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
                 response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>())
                 {
-                    Message = responseMessage 
+                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Errors = resultCategory.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
-            responseMessage = StringResponseMessages.SUCESS;
             response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto) { 
-                Message = responseMessage
+                Message = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }
@@ -57,28 +54,31 @@ namespace EmploymentApp.Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCategory(int id)
         {
             ApiResponse<CategoryReadDto> response;
             var resultCategory = await _categoryService.GetById(id);
             if(resultCategory.Status == ResultStatus.Error)
             {
-                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<CategoryReadDto>(null) { Message = responseMessage }; 
+                response = new ApiResponse<CategoryReadDto>(null) {
+                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Errors = resultCategory.Errors
+                }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
-            responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<CategoryReadDto>(categoryReadDto) { Message = responseMessage }; 
+            response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
+                Message = nameof(HttpStatusCode.OK)
+            }; 
             return Ok(response);
         }
 
         
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task <IActionResult> Post(CategoryDto categoryDto)
         {
             ApiResponse<CategoryReadDto> response;
@@ -86,21 +86,23 @@ namespace EmploymentApp.Api.Controllers
             var resultCategory =  await _categoryService.Add(category);
             if (resultCategory.Status == ResultStatus.Error)
             {
-                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<CategoryReadDto>(null) {Message = responseMessage};
+                response = new ApiResponse<CategoryReadDto>(null) {
+                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Errors = resultCategory.Errors
+                };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
-            responseMessage = StringResponseMessages.SUCESS;
             response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
-            Message = responseMessage
+                Message = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }
 
         [HttpPut]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(int id, CategoryDto categoryDto)
         {
             ApiResponse<bool> response;
@@ -110,25 +112,28 @@ namespace EmploymentApp.Api.Controllers
             var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<bool>(result) { Message = responseMessage };
+                response = new ApiResponse<bool>(result) { 
+                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Errors = resultCategory.Errors
+                };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
             {
-                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
-                response = new ApiResponse<bool>(result) { Message = responseMessage }; 
+                response = new ApiResponse<bool>(result) { 
+                    Message = nameof(HttpStatusCode.NotFound)
+                }; 
                 return NotFound(response);
             }
-            responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<bool>(result) { Message = responseMessage }; 
+            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) }; 
             return Ok(response);
         }
 
 
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;
@@ -136,18 +141,20 @@ namespace EmploymentApp.Api.Controllers
             var result = resultCategory.Value;
             if (resultCategory.Status == ResultStatus.Error)
             {
-                responseMessage = resultCategory.Errors.ElementAt((int)ErrorNum.First);
-                response = new ApiResponse<bool>(result) { Message = responseMessage }; ;
+                response = new ApiResponse<bool>(result) {
+                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Errors  = resultCategory.Errors
+                }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if (resultCategory.Status == ResultStatus.NotFound)
             {
-                responseMessage = StringResponseMessages.DOES_NOT_EXIST;
-                response = new ApiResponse<bool>(result) { Message = responseMessage }; 
+                response = new ApiResponse<bool>(result) {
+                    Message = nameof(HttpStatusCode.NotFound)
+                }; 
                 return NotFound(response);
             }
-            responseMessage = StringResponseMessages.SUCESS;
-            response = new ApiResponse<bool>(result) { Message = responseMessage }; 
+            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) }; 
             return Ok(response);
         }
     }
