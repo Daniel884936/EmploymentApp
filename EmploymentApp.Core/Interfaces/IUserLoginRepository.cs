@@ -6,5 +6,6 @@ namespace EmploymentApp.Core.Interfaces
     public interface IUserLoginRepository: IRepository<UserLogin>
     {
         Task< UserLogin> GetByEmail(string email);
+        Task<UserLogin> GetFullUserLoginByCredentials(string email, string password);
     }
 }

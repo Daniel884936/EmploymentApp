@@ -5,9 +5,11 @@ using EmploymentApp.Api.Source.Enums;
 using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.DTOs.UserDtos;
 using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Enums;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.QueryFilters;
 using EmploymentApp.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace EmploymentApp.Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -35,6 +38,7 @@ namespace EmploymentApp.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = nameof (Roles.Admin))]
         [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<UserReadDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<UserReadDto>>), StatusCodes.Status500InternalServerError)]
         public IActionResult GetUsers([FromQuery] UserQueryFilter filter)
@@ -45,7 +49,7 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiPagedResponse<IEnumerable<UserReadDto>>(Array.Empty<UserReadDto>()) 
                 { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultUser.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -57,13 +61,15 @@ namespace EmploymentApp.Api.Controllers
             var usersReadDto = _mapper.Map<IEnumerable<UserReadDto>>(users);
             response = new ApiPagedResponse<IEnumerable<UserReadDto>>(usersReadDto)
             { 
-                Message = nameof(HttpStatusCode.OK), 
+                Title = nameof(HttpStatusCode.OK), 
                 Meta = meta
             };
             return Ok(response);
         }
 
+        
         [HttpGet("{id}")]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>),StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetUser(int id)
@@ -73,7 +79,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<UserReadDto>(null) {
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultUser.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -82,11 +88,11 @@ namespace EmploymentApp.Api.Controllers
             var userReadDto = _mapper.Map<UserReadDto>(user);
             userReadDto.Email = user.UserLogin.ElementAt((int)UserLoginNum.First).Email;
             response = new ApiResponse<UserReadDto>(userReadDto) {
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }
-
+        
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status500InternalServerError)]
@@ -99,7 +105,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<UserReadDto>(null) { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultUser.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -107,17 +113,18 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.Invalid)
             {
                 response = new ApiResponse<UserReadDto>(null) { 
-                    Message = nameof(HttpStatusCode.Conflict),
+                    Title = nameof(HttpStatusCode.Conflict),
                     Errors = resultUser.ValidationErrors.Select(x=> x.ErrorMessage)
                 };
                 return Conflict(response);
             }
             var userReadDto = _mapper.Map<UserReadDto>(user);
-            response = new ApiResponse<UserReadDto>(userReadDto){Message = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<UserReadDto>(userReadDto){Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
 
         [HttpPut]
+        [Authorize(Roles ="Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -131,7 +138,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultUser.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -139,15 +146,16 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound)
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -159,17 +167,17 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors = resultUser.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultUser.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.NotFound)};
+                response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.NotFound)};
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
     }

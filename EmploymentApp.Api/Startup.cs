@@ -7,6 +7,7 @@ using EmploymentApp.Infrastructure.Interfaces;
 using EmploymentApp.Infrastructure.Repositories;
 using EmploymentApp.Infrastructure.Serices;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,8 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Text;
 
 namespace EmploymentApp.Api
 {
@@ -37,7 +40,7 @@ namespace EmploymentApp.Api
             });
 
             services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
-
+            services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.AddHttpContextAccessor();
             services.AddSingleton<IUriService>(provider =>
             {
@@ -54,6 +57,29 @@ namespace EmploymentApp.Api
             services.AddTransient<ITypeScheduleService, TypeScheduleService>();
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserLoginService, UserLoginService>();
+            services.AddTransient<ITokenService, TokenService>();
+
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+            ).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true, 
+                    ValidIssuer = Configuration["Authentication:Issuer"], 
+                    ValidAudience = Configuration["Authentication:Audience"], 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]))
+                };
+            });   
+
 
             services.AddMvc().AddFluentValidation(options => {
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
@@ -87,6 +113,7 @@ namespace EmploymentApp.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

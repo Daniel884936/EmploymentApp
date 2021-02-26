@@ -3,7 +3,9 @@ using AutoMapper;
 using EmploymentApp.Api.Responses;
 using EmploymentApp.Core.DTOs.CategoryDto;
 using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Enums;
 using EmploymentApp.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace EmploymentApp.Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -38,7 +41,7 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>())
                 {
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors = resultCategory.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -46,13 +49,14 @@ namespace EmploymentApp.Api.Controllers
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
             response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto) { 
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }
 
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCategory(int id)
@@ -62,7 +66,7 @@ namespace EmploymentApp.Api.Controllers
             if(resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<CategoryReadDto>(null) {
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultCategory.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
@@ -70,13 +74,14 @@ namespace EmploymentApp.Api.Controllers
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
             response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             }; 
             return Ok(response);
         }
 
         
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<CategoryReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task <IActionResult> Post(CategoryDto categoryDto)
@@ -87,19 +92,20 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<CategoryReadDto>(null) {
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultCategory.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
             response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }
 
         [HttpPut]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -113,7 +119,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors = resultCategory.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
@@ -121,16 +127,17 @@ namespace EmploymentApp.Api.Controllers
             if(resultCategory.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound)
                 }; 
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) }; 
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) }; 
             return Ok(response);
         }
 
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -142,7 +149,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) {
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors  = resultCategory.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
@@ -150,11 +157,11 @@ namespace EmploymentApp.Api.Controllers
             if (resultCategory.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) {
-                    Message = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound)
                 }; 
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) }; 
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) }; 
             return Ok(response);
         }
     }

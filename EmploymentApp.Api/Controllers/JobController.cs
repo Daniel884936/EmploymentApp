@@ -4,9 +4,11 @@ using EmploymentApp.Api.Responses;
 using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.DTOs.JobDtos;
 using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Enums;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.QueryFilters;
 using EmploymentApp.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -40,7 +42,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiPagedResponse<IEnumerable<JobReadDto>>(Array.Empty<JobReadDto>()) { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultJob.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -52,7 +54,7 @@ namespace EmploymentApp.Api.Controllers
             var jobsReadDto = _mapper.Map<IEnumerable<JobReadDto>>(jobs);
             response = new ApiPagedResponse<IEnumerable<JobReadDto>>(jobsReadDto)
             {
-                Message = nameof(HttpStatusCode.OK),
+                Title = nameof(HttpStatusCode.OK),
                 Meta = meta
             }; 
             return Ok(response);
@@ -60,6 +62,7 @@ namespace EmploymentApp.Api.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetJob(int id)
@@ -69,7 +72,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<JobReadDto>(null) {
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultJob.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -77,12 +80,13 @@ namespace EmploymentApp.Api.Controllers
             var job = resultJob.Value;
             var jobReadDto = _mapper.Map<JobReadDto>(job);
             response = new ApiResponse<JobReadDto>(jobReadDto) { 
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             }; 
             return Ok(response);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(JobDto jobDto)
@@ -93,19 +97,20 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<JobReadDto>(null) { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultJob.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobReadDto = _mapper.Map<JobReadDto>(job);
             response = new ApiResponse<JobReadDto>(jobReadDto) {
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             }; 
             return Ok(response);
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -119,7 +124,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors = resultJob.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -127,15 +132,16 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound)
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
@@ -147,7 +153,7 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resultJob.Errors
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -155,11 +161,11 @@ namespace EmploymentApp.Api.Controllers
             if (resultJob.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) {
-                    Message = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound)
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Message = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
     }

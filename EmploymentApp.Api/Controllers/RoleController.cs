@@ -3,6 +3,7 @@ using AutoMapper;
 using EmploymentApp.Api.Responses;
 using EmploymentApp.Core.DTOs.RoleDtos;
 using EmploymentApp.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Net;
 
 namespace EmploymentApp.Api.Controllers
 {
+    [Authorize(Roles =nameof(Core.Enums.Roles.Admin))]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase
@@ -34,7 +36,7 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>()) 
                 {
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors  = resultRoles.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -43,7 +45,7 @@ namespace EmploymentApp.Api.Controllers
             var roleReadDto = _mapper.Map<IEnumerable<RoleReadDto>>(roles);
             response = new ApiResponse<IEnumerable<RoleReadDto>>(roleReadDto)
             {
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             };
             return Ok(response);
         }

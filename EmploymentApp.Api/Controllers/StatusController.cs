@@ -3,6 +3,7 @@ using AutoMapper;
 using EmploymentApp.Api.Responses;
 using EmploymentApp.Core.DTOs.StatusDtos;
 using EmploymentApp.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Net;
 
 namespace EmploymentApp.Api.Controllers
 {
+    [Authorize(Roles = "Admin,Poster")]
     [Route("api/[controller]")]
     [ApiController]
     public class StatusController : ControllerBase
@@ -35,7 +37,7 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<IEnumerable<StatusReadDto>>(Array.Empty<StatusReadDto>())
                 {
-                    Message = nameof(HttpStatusCode.InternalServerError),
+                    Title = nameof(HttpStatusCode.InternalServerError),
                     Errors = resutlStatus.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -44,7 +46,7 @@ namespace EmploymentApp.Api.Controllers
             var statusReadDto = _mapper.Map<IEnumerable<StatusReadDto>>(status);
             response = new  ApiResponse<IEnumerable<StatusReadDto>>(statusReadDto)
             {
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             }; 
             return Ok(response);
         }

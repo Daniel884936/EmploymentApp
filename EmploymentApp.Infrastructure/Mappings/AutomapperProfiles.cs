@@ -23,6 +23,7 @@ namespace EmploymentApp.Infrastructure.Mappings
             MapJob();
             MapUser();
             MapMetadata();
+            MapUserLogin();
         }
         private void MapCategory()
         {
@@ -68,5 +69,9 @@ namespace EmploymentApp.Infrastructure.Mappings
             CreateMap<PagedList<User>, Metadata>();
         }
 
+        private void MapUserLogin()
+        {
+            CreateMap<UserLoginDto, UserLogin>();
+        }
     }
 }

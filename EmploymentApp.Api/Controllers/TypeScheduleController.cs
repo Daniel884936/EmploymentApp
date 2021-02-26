@@ -3,6 +3,7 @@ using AutoMapper;
 using EmploymentApp.Api.Responses;
 using EmploymentApp.Core.DTOs.TypeScheduleDto;
 using EmploymentApp.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Net;
 
 namespace EmploymentApp.Api.Controllers
 {
+    [Authorize(Roles = "Admin,Poster")]
     [Route("api/[controller]")]
     [ApiController]
     public class TypeScheduleController : ControllerBase
@@ -34,7 +36,7 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(Array.Empty<TypeScheduleReadDto>()) 
                 { 
-                    Message = nameof(HttpStatusCode.InternalServerError), 
+                    Title = nameof(HttpStatusCode.InternalServerError), 
                     Errors = resutlTypeSchedule.Errors
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
@@ -43,7 +45,7 @@ namespace EmploymentApp.Api.Controllers
             var typeScheduleReadDto = _mapper.Map<IEnumerable<TypeScheduleReadDto>>(typeSchedule);
             response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(typeScheduleReadDto) 
             { 
-                Message = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK)
             }; 
             return Ok(response);
         }

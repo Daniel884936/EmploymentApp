@@ -2,7 +2,6 @@
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 
 namespace EmploymentApp.Infrastructure.Repositories
@@ -15,6 +14,13 @@ namespace EmploymentApp.Infrastructure.Repositories
         public async Task<UserLogin> GetByEmail(string email)
         {
             return await _entities.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<UserLogin> GetFullUserLoginByCredentials(string email, string password)
+        {
+            return await _entities.Include(x => x.Role)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
         }
     }
 }
