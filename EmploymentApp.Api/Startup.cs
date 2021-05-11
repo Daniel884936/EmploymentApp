@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace EmploymentApp.Api
@@ -50,6 +51,7 @@ namespace EmploymentApp.Api
                 return new UriService(absoluteUri);
             }); 
 
+            //injections
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStatusService, StatusService>();
@@ -60,7 +62,7 @@ namespace EmploymentApp.Api
             services.AddTransient<IUserLoginService, UserLoginService>();
             services.AddTransient<ITokenService, TokenService>();
 
-
+            //authentication shema
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,16 +82,43 @@ namespace EmploymentApp.Api
                 };
             });   
 
-
+            //fluent validation
             services.AddMvc().AddFluentValidation(options => {
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
                 });
 
+            //Swagger
             services.AddSwaggerGen(doc =>
             {
-                doc.SwaggerDoc("v1", new OpenApiInfo{Title="EmploymentApp Api", Version ="v1" }); ;
+                doc.SwaggerDoc("v1", new OpenApiInfo{Title="EmploymentApp Api", Version ="v1" });
+
+                // To Enable authorization using Swagger (JWT)  
+                doc.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                });
+                doc.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
             });
-          
+            
+            //circular reference ignored 
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });

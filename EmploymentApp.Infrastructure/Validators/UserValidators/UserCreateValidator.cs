@@ -23,7 +23,7 @@ namespace EmploymentApp.Infrastructure.Validators.UserValidators
 
             RuleFor(user => user.Password)
                 .NotNull()
-                .Length(8, 60);
+                .Length(7, 60);
 
             RuleFor(user => user.Email)
                .NotNull()

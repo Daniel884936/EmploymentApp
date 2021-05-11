@@ -14,7 +14,7 @@ namespace EmploymentApp.Infrastructure.Validators.UserValidators
 
             RuleFor(userLogin => userLogin.Password)
                 .NotNull()
-                .Length(8, 60);
+                .Length(7, 60);
         }
     }
 }

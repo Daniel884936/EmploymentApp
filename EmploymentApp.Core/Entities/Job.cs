@@ -21,9 +21,11 @@ namespace EmploymentApp.Core.Entities
         public int StatusId { get; set; }
         public int UserId { get; set; }
 
+        #region relationships
         public virtual User User { get; set; }
         public virtual Category Category { get; set; }
         public virtual Status Status { get; set; }
         public virtual TypeSchedule TypeSchedule { get; set; }
+        #endregion
     }
 }

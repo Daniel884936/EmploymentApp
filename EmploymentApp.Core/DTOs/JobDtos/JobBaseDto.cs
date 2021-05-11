@@ -1,4 +1,6 @@
-﻿namespace EmploymentApp.Core.DTOs.JobDtos
+﻿using Microsoft.AspNetCore.Http;
+
+namespace EmploymentApp.Core.DTOs.JobDtos
 {
     public abstract class JobBaseDto
     {

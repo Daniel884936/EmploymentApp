@@ -10,6 +10,9 @@ using System.Security.Claims;
 using System.Text;
 namespace EmploymentApp.Infrastructure.Serices
 {
+    /// <summary>
+    /// Has methods to generate token with shema defined
+    /// </summary>
     public class TokenService: ITokenService
     {
         

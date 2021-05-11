@@ -35,14 +35,16 @@ namespace EmploymentApp.Infrastructure.Mappings
         private void MapTypeSchedule() => CreateMap<TypeSchedule, TypeScheduleReadDto>();
         private void MapJob()
         {
-            CreateMap<JobDto, Job>();
+            CreateMap<JobDto, Job>()
+                .ForMember(dest => dest.Img, opt => opt.Ignore());
 
             CreateMap<Job, JobReadDto>().ForMember(dest =>
             dest.Category, opt => opt.MapFrom(x => x.Category.Name))
                 .ForMember(dest =>
             dest.Status, opt => opt.MapFrom(x => x.Status.Name))
                 .ForMember(dest =>
-            dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name));
+            dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name))
+                .ForMember(dest => dest.Img, opt => opt.Ignore());
         }
         private void MapUser()
         {

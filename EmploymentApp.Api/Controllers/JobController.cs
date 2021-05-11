@@ -85,11 +85,12 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPost]
         [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(JobDto jobDto)
+        public async Task<IActionResult> Post( JobDto jobDto)
         {
             ApiResponse<JobReadDto> response;
             var job = _mapper.Map<Job>(jobDto);
@@ -139,6 +140,7 @@ namespace EmploymentApp.Api.Controllers
             response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
             return Ok(response);
         }
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Poster")]

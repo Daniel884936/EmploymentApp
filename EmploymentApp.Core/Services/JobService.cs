@@ -21,6 +21,7 @@ namespace EmploymentApp.Core.Services
             _unitOfWork = unitOfWork;
         }
 
+
         public async Task<Result<Job>> Add(Job job)
         {
             try
