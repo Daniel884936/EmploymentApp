@@ -5,6 +5,7 @@ using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.Services;
 using EmploymentApp.Infrastructure.Data;
 using EmploymentApp.Infrastructure.Interfaces;
+using EmploymentApp.Infrastructure.Options;
 using EmploymentApp.Infrastructure.Repositories;
 using EmploymentApp.Infrastructure.Serices;
 using FluentValidation.AspNetCore;
@@ -41,6 +42,7 @@ namespace EmploymentApp.Api
                 options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
 
+            services.Configure<FileOptions>(Configuration.GetSection("File"));
             services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.AddHttpContextAccessor();
