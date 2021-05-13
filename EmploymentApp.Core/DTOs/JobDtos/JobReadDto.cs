@@ -11,6 +11,7 @@ namespace EmploymentApp.Core.DTOs.JobDtos
         public DateTime Date { get; set; }
         public string Category { get; set; }
         public string Status { get; set; }
+        public string Img { get; set; }
         public string TypeSchedule { get; set; }
     }
 }

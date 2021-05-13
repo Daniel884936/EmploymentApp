@@ -43,8 +43,7 @@ namespace EmploymentApp.Infrastructure.Mappings
                 .ForMember(dest =>
             dest.Status, opt => opt.MapFrom(x => x.Status.Name))
                 .ForMember(dest =>
-            dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name))
-                .ForMember(dest => dest.Img, opt => opt.Ignore());
+            dest.TypeSchedule, opt => opt.MapFrom(x => x.TypeSchedule.Name));
         }
         private void MapUser()
         {
