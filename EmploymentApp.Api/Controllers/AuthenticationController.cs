@@ -19,7 +19,9 @@ namespace EmploymentApp.Api.Controllers
         private readonly ITokenService _tokenService;
         private readonly IUserLoginService _userLoginService;
         private readonly IMapper _mapper;
-        public AuthenticationController( ITokenService tokenService, IUserLoginService userLoginService,IMapper mapper)
+        public AuthenticationController( ITokenService tokenService,
+                                         IUserLoginService userLoginService,
+                                         IMapper mapper)
         {
             _tokenService = tokenService;
             _userLoginService = userLoginService;
@@ -41,21 +43,26 @@ namespace EmploymentApp.Api.Controllers
                 response = new ApiTokenResponse
                 {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultUserLogin.Errors
+                    Errors = resultUserLogin.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
+
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (userLogin == null)
             {
-                response = new ApiTokenResponse{ Title = nameof(HttpStatusCode.NotFound)};
+                response = new ApiTokenResponse{ 
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
+                };
                 return NotFound(response);
             }
-             response = new ApiTokenResponse
+            response = new ApiTokenResponse
             {
-                Token = _tokenService.GenerateToken(userLogin.User), 
-                Title = nameof(HttpStatusCode.OK)
+                Token = _tokenService.GenerateToken(userLogin.User),
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
              };
-
             return Ok(response);
         }
     }

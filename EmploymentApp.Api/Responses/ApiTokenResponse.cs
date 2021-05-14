@@ -1,7 +1,10 @@
-﻿namespace EmploymentApp.Api.Responses
+﻿using EmploymentApp.Core.CustomEntities;
+using EmploymentApp.Core.DTOs.UserDtos;
+
+namespace EmploymentApp.Api.Responses
 {
     public class ApiTokenResponse: ApiResponseBase
     {
-        public string Token { get; set; }
+        public Token Token { get; set; }
     }
 }

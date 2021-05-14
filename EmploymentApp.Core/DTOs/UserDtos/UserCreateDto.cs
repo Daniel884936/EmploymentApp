@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmploymentApp.Core.DTOs.UserDtos
+﻿namespace EmploymentApp.Core.DTOs.UserDtos
 {
     public class UserCreateDto: UserDto
     {

@@ -1,9 +1,10 @@
-﻿using EmploymentApp.Core.Entities;
+﻿using EmploymentApp.Core.CustomEntities;
+using EmploymentApp.Core.Entities;
 
 namespace EmploymentApp.Infrastructure.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(User user);
+        Token GenerateToken(User user);
     }
 }

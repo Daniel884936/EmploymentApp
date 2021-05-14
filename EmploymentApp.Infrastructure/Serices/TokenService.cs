@@ -21,7 +21,7 @@ namespace EmploymentApp.Infrastructure.Serices
         {
             _authenticationOptions = options.Value;
         }
-        public string GenerateToken(User user)
+        public Token GenerateToken(User user)
         {
             //header
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationOptions.SecretKey));
@@ -47,7 +47,13 @@ namespace EmploymentApp.Infrastructure.Serices
                 );
 
             var token = new JwtSecurityToken(header, payload);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            string jwtString = new JwtSecurityTokenHandler().WriteToken(token);
+            return new Token
+            {
+                Data = jwtString,
+                DateCreated = DateTime.Now,
+                DateToExpire = DateTime.UtcNow.AddMinutes(_authenticationOptions.Minutes)
+            };
         }
     }
 }

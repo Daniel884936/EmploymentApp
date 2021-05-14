@@ -42,14 +42,16 @@ namespace EmploymentApp.Api.Controllers
                 response = new ApiResponse<IEnumerable<CategoryReadDto>>(Array.Empty<CategoryReadDto>())
                 {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultCategory.Errors
+                    Errors = resultCategory.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var categories = resultCategory.Value;
             var categoriesReadDto = _mapper.Map<IEnumerable<CategoryReadDto>>(categories);
             response = new ApiResponse<IEnumerable<CategoryReadDto>>(categoriesReadDto) { 
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -67,14 +69,16 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<CategoryReadDto>(null) {
                     Title = nameof(HttpStatusCode.InternalServerError), 
-                    Errors = resultCategory.Errors
+                    Errors = resultCategory.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var cartegory = resultCategory.Value;
             var categoryReadDto = _mapper.Map<CategoryReadDto>(cartegory);
             response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             }; 
             return Ok(response);
         }
@@ -93,13 +97,15 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<CategoryReadDto>(null) {
                     Title = nameof(HttpStatusCode.InternalServerError), 
-                    Errors = resultCategory.Errors
+                    Errors = resultCategory.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
             response = new ApiResponse<CategoryReadDto>(categoryReadDto) { 
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -120,18 +126,23 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultCategory.Errors
+                    Errors = resultCategory.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if(resultCategory.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Title = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
                 }; 
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) }; 
+            response = new ApiResponse<bool>(result) { 
+                Title = nameof(HttpStatusCode.OK) ,
+                Satatus = (int)HttpStatusCode.OK
+            }; 
             return Ok(response);
         }
 
@@ -150,18 +161,23 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<bool>(result) {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors  = resultCategory.Errors
+                    Errors  = resultCategory.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
             if (resultCategory.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) {
-                    Title = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
                 }; 
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) }; 
+            response = new ApiResponse<bool>(result) {
+                Title = nameof(HttpStatusCode.OK) ,
+                Satatus = (int)HttpStatusCode.OK
+            }; 
             return Ok(response);
         }
     }

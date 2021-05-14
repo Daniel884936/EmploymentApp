@@ -37,7 +37,8 @@ namespace EmploymentApp.Api.Controllers
                 response = new ApiResponse<IEnumerable<RoleReadDto>>(Array.Empty<RoleReadDto>()) 
                 {
                     Title = nameof(HttpStatusCode.InternalServerError), 
-                    Errors  = resultRoles.Errors
+                    Errors  = resultRoles.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
@@ -45,7 +46,8 @@ namespace EmploymentApp.Api.Controllers
             var roleReadDto = _mapper.Map<IEnumerable<RoleReadDto>>(roles);
             response = new ApiResponse<IEnumerable<RoleReadDto>>(roleReadDto)
             {
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }

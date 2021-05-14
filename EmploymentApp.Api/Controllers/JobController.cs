@@ -49,7 +49,8 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiPagedResponse<IEnumerable<JobReadDto>>(Array.Empty<JobReadDto>()) {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultJob.Errors
+                    Errors = resultJob.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
@@ -61,7 +62,8 @@ namespace EmploymentApp.Api.Controllers
             response = new ApiPagedResponse<IEnumerable<JobReadDto>>(jobsReadDto)
             {
                 Title = nameof(HttpStatusCode.OK),
-                Meta = meta
+                Meta = meta,
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -79,14 +81,16 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<JobReadDto>(null) {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultJob.Errors
+                    Errors = resultJob.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var job = resultJob.Value;
             var jobReadDto = _mapper.Map<JobReadDto>(job);
             response = new ApiResponse<JobReadDto>(jobReadDto) {
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -111,13 +115,15 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<JobReadDto>(null) {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultJob.Errors
+                    Errors = resultJob.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             var jobReadDto = _mapper.Map<JobReadDto>(job);
             response = new ApiResponse<JobReadDto>(jobReadDto) {
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -159,18 +165,23 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<bool>(result) {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultJob.Errors
+                    Errors = resultJob.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) {
-                    Title = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { 
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
+            };
             return Ok(response);
         }
 
@@ -209,18 +220,23 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError), 
-                    Errors = resultJob.Errors
+                    Errors = resultJob.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultJob.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) {
-                    Title = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { 
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
+            };
             return Ok(response);
         }
     }

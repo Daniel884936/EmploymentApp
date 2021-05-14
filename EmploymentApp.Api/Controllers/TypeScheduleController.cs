@@ -37,7 +37,8 @@ namespace EmploymentApp.Api.Controllers
                 response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(Array.Empty<TypeScheduleReadDto>()) 
                 { 
                     Title = nameof(HttpStatusCode.InternalServerError), 
-                    Errors = resutlTypeSchedule.Errors
+                    Errors = resutlTypeSchedule.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError,response);
             }
@@ -45,7 +46,8 @@ namespace EmploymentApp.Api.Controllers
             var typeScheduleReadDto = _mapper.Map<IEnumerable<TypeScheduleReadDto>>(typeSchedule);
             response = new ApiResponse<IEnumerable<TypeScheduleReadDto>>(typeScheduleReadDto) 
             { 
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             }; 
             return Ok(response);
         }

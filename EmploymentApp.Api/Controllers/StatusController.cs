@@ -38,7 +38,8 @@ namespace EmploymentApp.Api.Controllers
                 response = new ApiResponse<IEnumerable<StatusReadDto>>(Array.Empty<StatusReadDto>())
                 {
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resutlStatus.Errors
+                    Errors = resutlStatus.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 }; 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
@@ -46,7 +47,8 @@ namespace EmploymentApp.Api.Controllers
             var statusReadDto = _mapper.Map<IEnumerable<StatusReadDto>>(status);
             response = new  ApiResponse<IEnumerable<StatusReadDto>>(statusReadDto)
             {
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             }; 
             return Ok(response);
         }

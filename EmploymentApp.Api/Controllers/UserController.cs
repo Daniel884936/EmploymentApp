@@ -62,7 +62,8 @@ namespace EmploymentApp.Api.Controllers
             response = new ApiPagedResponse<IEnumerable<UserReadDto>>(usersReadDto)
             { 
                 Title = nameof(HttpStatusCode.OK), 
-                Meta = meta
+                Meta = meta,
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -88,7 +89,8 @@ namespace EmploymentApp.Api.Controllers
             var userReadDto = _mapper.Map<UserReadDto>(user);
             userReadDto.Email = user.UserLogin.ElementAt((int)UserLoginNum.First).Email;
             response = new ApiResponse<UserReadDto>(userReadDto) {
-                Title = nameof(HttpStatusCode.OK)
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
             };
             return Ok(response);
         }
@@ -114,12 +116,16 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<UserReadDto>(null) { 
                     Title = nameof(HttpStatusCode.Conflict),
-                    Errors = resultUser.ValidationErrors.Select(x=> x.ErrorMessage)
+                    Errors = resultUser.ValidationErrors.Select(x=> x.ErrorMessage),
+                    Satatus = (int)HttpStatusCode.Conflict
                 };
                 return Conflict(response);
             }
             var userReadDto = _mapper.Map<UserReadDto>(user);
-            response = new ApiResponse<UserReadDto>(userReadDto){Title = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<UserReadDto>(userReadDto){
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
+            };
             return Ok(response);
         }
 
@@ -146,11 +152,15 @@ namespace EmploymentApp.Api.Controllers
             if (resultUser.Status == ResultStatus.NotFound)
             {
                 response = new ApiResponse<bool>(result) { 
-                    Title = nameof(HttpStatusCode.NotFound)
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
                 };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { 
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
+            };
             return Ok(response);
         }
 
@@ -168,16 +178,23 @@ namespace EmploymentApp.Api.Controllers
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError),
-                    Errors = resultUser.Errors
+                    Errors = resultUser.Errors,
+                    Satatus = (int)HttpStatusCode.InternalServerError
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             if (resultUser.Status == ResultStatus.NotFound)
             {
-                response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.NotFound)};
+                response = new ApiResponse<bool>(result) { 
+                    Title = nameof(HttpStatusCode.NotFound),
+                    Satatus = (int)HttpStatusCode.NotFound
+                };
                 return NotFound(response);
             }
-            response = new ApiResponse<bool>(result) { Title = nameof(HttpStatusCode.OK) };
+            response = new ApiResponse<bool>(result) { 
+                Title = nameof(HttpStatusCode.OK),
+                Satatus = (int)HttpStatusCode.OK
+            };
             return Ok(response);
         }
     }
