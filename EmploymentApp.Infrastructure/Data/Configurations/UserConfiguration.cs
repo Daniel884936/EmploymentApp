@@ -24,6 +24,9 @@ namespace EmploymentApp.Infrastructure.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            builder.Property(e => e.Img)
+                .HasColumnType("text");
         }
     }
 }

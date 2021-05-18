@@ -1,5 +1,6 @@
 using AutoMapper;
 using EmploymentApp.Api.Handlers.FileStorageHandler;
+using EmploymentApp.Api.services.Image;
 using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.Interfaces;
 using EmploymentApp.Core.Services;
@@ -65,6 +66,7 @@ namespace EmploymentApp.Api
             services.AddTransient<IUserLoginService, UserLoginService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddSingleton<IFileStorage, FileStorage>();
+            services.AddTransient<IImageService, ImageService>();
 
             //authentication shema
             services.AddAuthentication(options =>

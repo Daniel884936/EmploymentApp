@@ -19,6 +19,7 @@ namespace EmploymentApp.Infrastructure.Mappings
             MapCategory();
             MapStatus();
             MapTypeSchedule();
+            MapTypeSchedule();
             MapRole();
             MapJob();
             MapUser();
@@ -53,14 +54,17 @@ namespace EmploymentApp.Infrastructure.Mappings
            dest.Role, opt => opt.MapFrom(x =>
            x.UserLogin.ElementAt(0).Role.Name));
 
-           CreateMap<UserCreateDto, User>().ForMember(dest => dest.UserLogin
-           , opt => opt.MapFrom(x => new List<UserLogin> {
+            CreateMap<UserCreateDto, User>().ForMember(dest => dest.UserLogin
+            , opt => opt.MapFrom(x => new List<UserLogin> {
                new UserLogin {
                    Password = x.Password,
                    Email = x.Email,
                    RoleId = (int)x.RoleId
                }
-           }));
+            }))
+            .ForMember(dest =>
+            dest.Img, opt => opt.Ignore());
+
            CreateMap<UserDto, User>();
         }
 

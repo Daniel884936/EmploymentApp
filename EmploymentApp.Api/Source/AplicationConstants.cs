@@ -9,7 +9,8 @@ namespace EmploymentApp.Api.Source
     {
         public static class FileContainers
         {
-            public const string ImageContainer = "jobImages";
+            public const string JobImageContainer = "jobImages";
+            public const string UserImageContainer = "userImages";
         }
     }
 }

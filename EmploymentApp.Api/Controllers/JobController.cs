@@ -2,6 +2,7 @@
 using AutoMapper;
 using EmploymentApp.Api.Handlers.FileStorageHandler;
 using EmploymentApp.Api.Responses;
+using EmploymentApp.Api.services.Image;
 using EmploymentApp.Api.Source;
 using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.DTOs.JobDtos;
@@ -29,13 +30,15 @@ namespace EmploymentApp.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
         private readonly IFileStorage _fileStorage;
+        private readonly IImageService _imageService;
 
-        public JobController(IJobService JobService, IMapper mapper, IUriService uriService, IFileStorage fileStorage)
+        public JobController(IJobService JobService, IMapper mapper, IUriService uriService, IFileStorage fileStorage, IImageService imageService)
         {
             _JobService = JobService;
             _mapper = mapper;
             _uriService = uriService;
             _fileStorage = fileStorage;
+            _imageService = imageService;
         }
 
         [HttpGet]
@@ -107,7 +110,8 @@ namespace EmploymentApp.Api.Controllers
             string imgUrl;
             if (jobDto.Img != null)
             {
-                imgUrl = await SaveImage(jobDto.Img);
+                imgUrl = await _imageService.Save(jobDto.Img, 
+                    AplicationConstants.FileContainers.JobImageContainer);
                 job.Img = imgUrl;
             }
             var resultJob = await _JobService.Add(job);
@@ -128,20 +132,6 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
-        private async Task<string> SaveImage(IFormFile photo)
-        {
-            using var stream = new MemoryStream();
-            await photo.CopyToAsync(stream);
-            var fileBytes = stream.ToArray();
-            return await _fileStorage.Create(new FileHandler
-            {
-                File = fileBytes,
-                ContentType = photo.ContentType,
-                Extention = Path.GetExtension(photo.FileName),
-                Container = AplicationConstants.FileContainers.ImageContainer,
-                Name = Guid.NewGuid().ToString()
-            });
-        }
 
         [HttpPut]
         [Authorize(Roles = "Admin,Poster")]
@@ -157,7 +147,8 @@ namespace EmploymentApp.Api.Controllers
             var jobImage = resultJobImage.Value;
             if (jobImage != null)
             {
-                job.Img = await UpdateImg(jobImage.Img, jobDto.Img);
+                job.Img = await _imageService.Update(jobImage.Img, jobDto.Img,
+                    AplicationConstants.FileContainers.JobImageContainer);
             }
             var resultJob = await _JobService.Update(job);
             var result = resultJob.Value;
@@ -185,20 +176,6 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
-        ///<summary>
-        ///replace old img from directory 
-        ///return new img url
-        ///</summary>
-        private async Task<string> UpdateImg(string oldJobImgUrl, IFormFile imgDto){
-            if (!string.IsNullOrEmpty(oldJobImgUrl))
-                await _fileStorage.Delete(oldJobImgUrl, AplicationConstants.FileContainers.ImageContainer);
-            if (imgDto != null)
-            {
-                var imgUrl = await SaveImage(imgDto);
-                return imgUrl;
-            }
-            return null;
-        }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Poster")]
@@ -212,7 +189,7 @@ namespace EmploymentApp.Api.Controllers
             if(resultJobImg != null)
             {
                 if (!string.IsNullOrEmpty(resultJobImg.Img))     
-                    await _fileStorage.Delete(resultJobImg.Img, AplicationConstants.FileContainers.ImageContainer);             
+                    await _imageService.Delete(resultJobImg.Img, AplicationConstants.FileContainers.JobImageContainer);             
             }
             var resultJob = await _JobService.Remove(id);
             var result = resultJob.Value;

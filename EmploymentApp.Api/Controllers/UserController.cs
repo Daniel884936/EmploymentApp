@@ -99,7 +99,7 @@ namespace EmploymentApp.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<UserReadDto>), StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> Post(UserCreateDto userCreateDto)
+        public async Task<IActionResult> Post([FromForm]UserCreateDto userCreateDto)
         {
             ApiResponse<UserReadDto> response;
             var user = _mapper.Map<User>(userCreateDto);
