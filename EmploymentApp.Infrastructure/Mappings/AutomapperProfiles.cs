@@ -65,7 +65,8 @@ namespace EmploymentApp.Infrastructure.Mappings
             .ForMember(dest =>
             dest.Img, opt => opt.Ignore());
 
-           CreateMap<UserDto, User>();
+            CreateMap<UserDto, User>()
+                .ForMember(dest => dest.Img, opt => opt.Ignore());
         }
 
         private void MapMetadata()

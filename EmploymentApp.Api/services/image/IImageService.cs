@@ -6,7 +6,6 @@ namespace EmploymentApp.Api.services.Image
     public interface IImageService
     {
         Task<string> Save(IFormFile image, string containerName);
-
         ///<summary>
         ///replace old img from directory 
         ///return new img url

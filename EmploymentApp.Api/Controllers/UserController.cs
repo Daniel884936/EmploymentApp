@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using EmploymentApp.Api.Responses;
+using EmploymentApp.Api.services.Image;
+using EmploymentApp.Api.Source;
 using EmploymentApp.Api.Source.Enums;
 using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.DTOs.UserDtos;
@@ -28,12 +30,14 @@ namespace EmploymentApp.Api.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
+        private readonly IImageService _imageService;
 
-        public UserController(IUserService userService, IMapper mapper, IUriService uriService)
+        public UserController(IUserService userService, IMapper mapper, IUriService uriService, IImageService imageService)
         {
             _userService = userService;
             _mapper = mapper;
             _uriService = uriService;
+            _imageService = imageService;
             
         }
 
@@ -103,6 +107,14 @@ namespace EmploymentApp.Api.Controllers
         {
             ApiResponse<UserReadDto> response;
             var user = _mapper.Map<User>(userCreateDto);
+            string imgUrl;
+            if(userCreateDto.Email != null)
+            {
+                imgUrl = await _imageService.Save(userCreateDto.Img,
+                    AplicationConstants.FileContainers.UserImageContainer);
+                user.Img = imgUrl;
+            }
+
             var resultUser = await _userService.Add(user);
             if (resultUser.Status == ResultStatus.Error)
             {
@@ -134,14 +146,21 @@ namespace EmploymentApp.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, UserDto userDto)
+        public async Task<IActionResult> Put(int id, [FromForm] UserDto userDto)
         {
             ApiResponse<bool> response;
             var user = _mapper.Map<User>(userDto);
             user.Id = id;
+            var resultUserImage = await _userService.GetById(id);
+            var userImage = resultUserImage.Value;
+            if(userImage != null)
+            {
+                user.Img = await _imageService.Update(userImage.Img, userDto.Img,
+                    AplicationConstants.FileContainers.UserImageContainer);
+            }
             var resultUser = await _userService.Update(user);
             var result = resultUser.Value;
-            if (resultUser.Status == ResultStatus.Error)
+            if (resultUser.Status == ResultStatus.Error || resultUser.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError), 
@@ -164,6 +183,7 @@ namespace EmploymentApp.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Poster")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -172,9 +192,16 @@ namespace EmploymentApp.Api.Controllers
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;
+            var resultUserImage = await _userService.GetById(id);
+            if(resultUserImage.Value != null)
+            {
+                if (!string.IsNullOrEmpty(resultUserImage.Value.Img))
+                    await _imageService.Delete(resultUserImage.Value.Img, 
+                        AplicationConstants.FileContainers.UserImageContainer);
+            }
             var resultUser = await _userService.Remove(id);
             var result = resultUser.Value;
-            if (resultUser.Status == ResultStatus.Error)
+            if (resultUser.Status == ResultStatus.Error || resultUserImage.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError),

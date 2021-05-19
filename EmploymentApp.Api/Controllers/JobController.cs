@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
-using EmploymentApp.Api.Handlers.FileStorageHandler;
 using EmploymentApp.Api.Responses;
 using EmploymentApp.Api.services.Image;
 using EmploymentApp.Api.Source;
@@ -16,7 +15,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -29,15 +27,13 @@ namespace EmploymentApp.Api.Controllers
         private readonly IJobService _JobService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
-        private readonly IFileStorage _fileStorage;
         private readonly IImageService _imageService;
 
-        public JobController(IJobService JobService, IMapper mapper, IUriService uriService, IFileStorage fileStorage, IImageService imageService)
+        public JobController(IJobService JobService, IMapper mapper, IUriService uriService, IImageService imageService)
         {
             _JobService = JobService;
             _mapper = mapper;
             _uriService = uriService;
-            _fileStorage = fileStorage;
             _imageService = imageService;
         }
 
@@ -80,6 +76,7 @@ namespace EmploymentApp.Api.Controllers
         {
             ApiResponse<JobReadDto> response;
             var resultJob = await _JobService.GetById(id);
+
             if (resultJob.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<JobReadDto>(null) {
@@ -185,15 +182,15 @@ namespace EmploymentApp.Api.Controllers
         public async Task<IActionResult> Detele(int id)
         {
             ApiResponse<bool> response;
-            var resultJobImg = (await _JobService.GetById(id)).Value;
+            var resultJobImg = await _JobService.GetById(id);
             if(resultJobImg != null)
             {
-                if (!string.IsNullOrEmpty(resultJobImg.Img))     
-                    await _imageService.Delete(resultJobImg.Img, AplicationConstants.FileContainers.JobImageContainer);             
+                if (!string.IsNullOrEmpty(resultJobImg.Value.Img))     
+                    await _imageService.Delete(resultJobImg.Value.Img, AplicationConstants.FileContainers.JobImageContainer);             
             }
             var resultJob = await _JobService.Remove(id);
             var result = resultJob.Value;
-            if (resultJob.Status == ResultStatus.Error || resultJob.Status == ResultStatus.Error)
+            if (resultJob.Status == ResultStatus.Error || resultJobImg.Status == ResultStatus.Error)
             {
                 response = new ApiResponse<bool>(result) { 
                     Title = nameof(HttpStatusCode.InternalServerError), 

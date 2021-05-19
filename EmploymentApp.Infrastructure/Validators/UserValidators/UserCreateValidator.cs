@@ -1,13 +1,18 @@
 ﻿using EmploymentApp.Core.DTOs.UserDtos;
+using EmploymentApp.Infrastructure.Options;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace EmploymentApp.Infrastructure.Validators.UserValidators
 {
     public class UserCreateValidator: AbstractValidator<UserCreateDto>
     {
-        public UserCreateValidator()
+        private readonly FileOptions _fileOptions;
+        public UserCreateValidator(IOptions<FileOptions> options)
         {
+            _fileOptions = options.Value;
+
             RuleFor(user => user.Name)
                 .NotNull()
                 .Length(3, 50);
@@ -32,7 +37,14 @@ namespace EmploymentApp.Infrastructure.Validators.UserValidators
 
             RuleFor(user => user.RoleId)
               .NotNull();
-        }
 
+            RuleFor(user => user.Img)
+                .Must(img => FileValidator.ValidFileType(img, _fileOptions.ValidTypes))
+                .WithMessage($"must be {string.Join(", ", _fileOptions.ValidTypes)}");
+
+            RuleFor(user => user.Img)
+                .Must(img => FileValidator.LessThan(img, _fileOptions.MaxKb))
+                .WithMessage($"max size {_fileOptions.MaxKb}kb");
+        }
     }
 }

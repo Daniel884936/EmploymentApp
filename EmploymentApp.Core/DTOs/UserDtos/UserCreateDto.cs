@@ -7,7 +7,5 @@ namespace EmploymentApp.Core.DTOs.UserDtos
         public string Password { get; set; }
         public string Email { get; set; }
         public int? RoleId { get; set; }
-        public IFormFile Img { get; set; }
-
     }
 }

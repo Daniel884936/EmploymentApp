@@ -2,7 +2,6 @@
 using EmploymentApp.Infrastructure.Options;
 using FluentValidation;
 using Microsoft.Extensions.Options;
-using System.Linq;
 
 namespace EmploymentApp.Infrastructure.Validators
 {
@@ -41,27 +40,12 @@ namespace EmploymentApp.Infrastructure.Validators
         private void RulesForImg()
         {
             RuleFor(job => job.Img)
-                .Must(img =>
-                {
-                    if (img != null)
-                    {
-                        if (_fileOptions.ValidTypes.Contains(img.ContentType)) return true;
-                    }
-                    return false;
-                })
+                .Must(img =>  FileValidator.ValidFileType(img , _fileOptions.ValidTypes))
                 .WithMessage($"must be {string.Join(", ",_fileOptions.ValidTypes)}");
 
 
             RuleFor(job => job.Img)
-                .Must(img =>
-                {
-                    if (img != null)
-                    {
-                        int kbSize = _fileOptions.MaxKb;
-                        if (img.Length / 1000 <= kbSize) return true;
-                    }
-                    return false;
-                })
+                .Must(img => FileValidator.LessThan(img, _fileOptions.MaxKb))
                 .WithMessage($"max size {_fileOptions.MaxKb}kb");
         }
     }
