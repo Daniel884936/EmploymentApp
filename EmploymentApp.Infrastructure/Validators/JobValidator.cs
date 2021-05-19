@@ -31,8 +31,8 @@ namespace EmploymentApp.Infrastructure.Validators
             RuleFor(job => job.TypeScheduleId)
                 .NotNull();
 
-            RuleFor(job => job.UserId)
-                .NotNull();
+            //RuleFor(job => job.UserId)
+            //    .NotNull();
 
             RulesForImg();
         }

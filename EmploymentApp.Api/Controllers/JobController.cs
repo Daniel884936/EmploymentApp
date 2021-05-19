@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EmploymentApp.Api.Controllers
 {
@@ -41,7 +42,7 @@ namespace EmploymentApp.Api.Controllers
         [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<JobReadDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiPagedResponse<IEnumerable<JobReadDto>>), StatusCodes.Status500InternalServerError)]
         public IActionResult GetJobs([FromQuery] JobQueryFilter filter)
-        {
+        {           
             ApiResponse<IEnumerable<JobReadDto>> response;
             var resultJob = _JobService.GetAll(filter);
             if (resultJob.Status == ResultStatus.Error)
@@ -73,7 +74,7 @@ namespace EmploymentApp.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetJob(int id)
-        {
+        {            
             ApiResponse<JobReadDto> response;
             var resultJob = await _JobService.GetById(id);
 
@@ -102,8 +103,11 @@ namespace EmploymentApp.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<JobReadDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromForm] JobDto jobDto)
         {
+            //user id from token
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == nameof(PublicClaims.UserId)).Value);
             ApiResponse<JobReadDto> response;
             var job = _mapper.Map<Job>(jobDto);
+            job.UserId = userId;
             string imgUrl;
             if (jobDto.Img != null)
             {

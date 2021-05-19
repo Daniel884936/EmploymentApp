@@ -1,5 +1,6 @@
 ﻿using EmploymentApp.Core.CustomEntities;
 using EmploymentApp.Core.Entities;
+using EmploymentApp.Core.Enums;
 using EmploymentApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ namespace EmploymentApp.Infrastructure.Serices
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Name),
+                new Claim(nameof(PublicClaims.UserId), user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.UserLogin.ElementAt(0).Email),
                 new Claim(ClaimTypes.Role, user.UserLogin.ElementAt(0).Role.Name),
                 new Claim(ClaimTypes.DateOfBirth, user.Bithdate.ToShortDateString()),
