@@ -43,6 +43,7 @@ namespace EmploymentApp.Api
                 options.UseSqlServer(Configuration.GetConnectionString("EmploymentDb"));
             });
 
+            //injections 
             services.Configure<FileOptions>(Configuration.GetSection("File"));
             services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
@@ -55,7 +56,7 @@ namespace EmploymentApp.Api
                 return new UriService(absoluteUri);
             }); 
 
-            //injections
+            
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStatusService, StatusService>();
@@ -123,13 +124,21 @@ namespace EmploymentApp.Api
                     }
                 });
             });
+
+            //Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader());
+            });
             
             //circular reference ignored 
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-           
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -144,7 +153,9 @@ namespace EmploymentApp.Api
             app.UseSwaggerUI(options => {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "EmploymentApp Api");
             });
+
             app.UseHttpsRedirection();
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseRouting();
             app.UseStaticFiles();
