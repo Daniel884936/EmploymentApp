@@ -17,8 +17,7 @@ namespace EmploymentApp.Infrastructure.Repositories
         {
             var fullJobs = _entities.Include(x => x.Category)
                 .Include(x => x.Status)
-                .Include(x => x.TypeSchedule).OrderByDescending(x=>
-                x.Date <= DateTime.Now).AsEnumerable();
+                .Include(x => x.TypeSchedule).AsEnumerable();
             return fullJobs;
         }
 

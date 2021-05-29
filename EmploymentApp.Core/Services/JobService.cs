@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EmploymentApp.Core.Services
 {
@@ -46,8 +47,12 @@ namespace EmploymentApp.Core.Services
             {
                 jobs = _unitOfWork.JobRepository.GetFullJobs();
                 if (jobs != null)
+                {
+                    if (filter.Recents)
+                        jobs = jobs.OrderByDescending(x => x.Date);
                     jobs = JobDataFilter.FilterJobs(jobs, filter);
-
+                }
+                   
                 if (jobs != null)
                 {
                     filter.PageNumber = filter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filter.PageNumber;

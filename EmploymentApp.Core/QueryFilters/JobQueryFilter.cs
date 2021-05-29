@@ -11,5 +11,7 @@ namespace EmploymentApp.Core.QueryFilters
         public DateTime? Date { get; set; }
         public string Category { get; set; }
         public string TypeSchedule { get; set; }
+        public string Search { get; set; }
+        public bool Recents { get; set; } = true;
     }
 }

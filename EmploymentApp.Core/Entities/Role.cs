@@ -11,5 +11,6 @@ namespace EmploymentApp.Core.Entities
     {      
         public string Name { get; set; }
         public virtual ICollection<UserLogin> UserLogin { get; set; }
+
     }
 }

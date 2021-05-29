@@ -10,6 +10,9 @@ namespace EmploymentApp.Core.DataFilter
     {
         public static IEnumerable<Job> FilterJobs(IEnumerable<Job> jobs, JobQueryFilter jobQueryFilter)
         {
+            if (!string.IsNullOrEmpty(jobQueryFilter.Search) && jobs != null)
+                jobs = FilterBySearch(jobs, jobQueryFilter.Search);
+
             if (!string.IsNullOrEmpty(jobQueryFilter.Category) && jobs != null)
                 jobs = FilterByCategory( jobs, jobQueryFilter.Category);
 
@@ -28,6 +31,15 @@ namespace EmploymentApp.Core.DataFilter
             return jobs;
         }
 
+        private static IEnumerable<Job> FilterBySearch(IEnumerable<Job> jobs, string search)
+        {
+            var searchModify = search.Trim().ToLower();
+            return jobs.Where(x => x.Title.ToLower().Trim().Contains(searchModify) ||
+                                   x.Category.Name.ToLower().Trim().Contains(searchModify) ||
+                                   x.Company.ToLower().Trim().Contains(searchModify) ||
+                                   x.TypeSchedule.Name.ToLower().Trim().Contains(searchModify));
+        }
+
         private static IEnumerable<Job> FilterByCategory(IEnumerable<Job> jobs, string category) =>
             jobs.Where(x => x.Category.Name.ToLower().Trim().Contains(category.ToLower()));
             
@@ -42,7 +54,6 @@ namespace EmploymentApp.Core.DataFilter
 
         private static IEnumerable<Job> FilterByDate(IEnumerable<Job> jobs, DateTime? date) =>
             jobs.Where(x => x.Date <= date);
-
 
     }
 }
