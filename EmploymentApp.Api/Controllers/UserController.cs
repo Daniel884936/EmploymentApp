@@ -108,7 +108,7 @@ namespace EmploymentApp.Api.Controllers
             ApiResponse<UserReadDto> response;
             var user = _mapper.Map<User>(userCreateDto);
             string imgUrl;
-            if(userCreateDto.Email != null)
+            if(userCreateDto.Img != null)
             {
                 imgUrl = await _imageService.Save(userCreateDto.Img,
                     AplicationConstants.FileContainers.UserImageContainer);
@@ -152,10 +152,10 @@ namespace EmploymentApp.Api.Controllers
             var user = _mapper.Map<User>(userDto);
             user.Id = id;
             var resultUserImage = await _userService.GetById(id);
-            var userImage = resultUserImage.Value;
+            var userImage = resultUserImage?.Value.Img;
             if(userImage != null)
             {
-                user.Img = await _imageService.Update(userImage.Img, userDto.Img,
+                user.Img = await _imageService.Update(userImage, userDto.Img,
                     AplicationConstants.FileContainers.UserImageContainer);
             }
             var resultUser = await _userService.Update(user);
